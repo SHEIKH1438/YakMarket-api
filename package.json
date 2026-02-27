@@ -9,9 +9,9 @@
     "strapi": "strapi"
   },
   "dependencies": {
-    "@strapi/strapi": "4.24.4",
-    "@strapi/plugin-users-permissions": "4.24.4",
-    "@strapi/provider-upload-cloudinary": "4.24.4",
+    "@strapi/strapi": "4.25.1",
+    "@strapi/plugin-users-permissions": "4.25.1",
+    "@strapi/provider-upload-cloudinary": "4.25.1",
     "pg": "8.11.3",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.2",
