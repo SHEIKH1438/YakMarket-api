@@ -2,7 +2,6 @@
   "name": "yakmarket-strapi-backend",
   "private": true,
   "version": "1.0.0",
-  "description": "YakMarket Strapi Backend with Roles and Security",
   "scripts": {
     "develop": "strapi develop",
     "start": "strapi start",
@@ -12,35 +11,13 @@
   "dependencies": {
     "@strapi/strapi": "4.24.4",
     "@strapi/plugin-users-permissions": "4.24.4",
-    "@strapi/plugin-i18n": "4.24.4",
-    "@strapi/plugin-email": "4.24.4",
-    "@strapi/plugin-documentation": "4.24.4",
     "@strapi/provider-upload-cloudinary": "4.24.4",
     "pg": "8.11.3",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.2",
-    "nodemailer": "^6.9.7",
-    "stripe": "^14.9.0",
-    "multer": "^1.4.5-lts.1",
-    "sharp": "^0.32.6",
-    "cors": "^2.8.5",
-    "helmet": "^7.1.0",
-    "express-rate-limit": "^7.1.5",
-    "compression": "^1.7.4",
-    "morgan": "^1.10.0",
-    "socket.io": "^4.7.4",
-    "csurf": "^1.11.0",
-    "cookie-parser": "^1.4.6"
-  },
-  "author": {
-    "name": "YakMarket Team"
-  },
-  "strapi": {
-    "uuid": "yakmarket-strapi-backend"
+    "sharp": "^0.32.6"
   },
   "engines": {
-    "node": ">=18.0.0 <=20.x.x",
-    "npm": ">=6.0.0"
-  },
-  "license": "MIT"
+    "node": ">=18.0.0 <=20.x.x"
+  }
 }
