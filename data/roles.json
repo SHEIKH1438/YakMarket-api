@@ -1,0 +1,666 @@
+[
+  {
+    "name": "Public",
+    "description": "Public role",
+    "type": "public",
+    "permissions": [
+      {
+        "action": "find",
+        "subject": "api::product.product",
+        "properties": {
+          "fields": [
+            "title",
+            "description",
+            "price",
+            "category",
+            "location",
+            "images",
+            "status",
+            "condition",
+            "negotiable",
+            "views",
+            "likes",
+            "featured",
+            "createdAt",
+            "owner"
+          ],
+          "filters": {
+            "status": [
+              "active",
+              "sold"
+            ]
+          }
+        }
+      },
+      {
+        "action": "findOne",
+        "subject": "api::product.product",
+        "properties": {
+          "fields": [
+            "title",
+            "description",
+            "price",
+            "category",
+            "subcategory",
+            "location",
+            "images",
+            "phone",
+            "status",
+            "condition",
+            "negotiable",
+            "views",
+            "likes",
+            "featured",
+            "createdAt",
+            "updatedAt",
+            "owner"
+          ]
+        }
+      },
+      {
+        "action": "find",
+        "subject": "api::category.category",
+        "properties": {
+          "fields": [
+            "name",
+            "slug",
+            "description",
+            "icon",
+            "image",
+            "parent",
+            "children",
+            "order",
+            "active",
+            "featured"
+          ],
+          "filters": {
+            "active": true
+          }
+        }
+      },
+      {
+        "action": "findOne",
+        "subject": "api::category.category"
+      },
+      {
+        "action": "find",
+        "subject": "plugin::users-permissions.user",
+        "properties": {
+          "fields": [
+            "id",
+            "username",
+            "firstName",
+            "lastName",
+            "avatar",
+            "bio",
+            "location",
+            "rating",
+            "totalReviews"
+          ]
+        }
+      },
+      {
+        "action": "findOne",
+        "subject": "plugin::users-permissions.user",
+        "properties": {
+          "fields": [
+            "id",
+            "username",
+            "firstName",
+            "lastName",
+            "avatar",
+            "bio",
+            "location",
+            "rating",
+            "totalReviews"
+          ]
+        }
+      },
+      {
+        "action": "find",
+        "subject": "api::tag.tag"
+      },
+      {
+        "action": "findOne",
+        "subject": "api::tag.tag"
+      }
+    ]
+  },
+  {
+    "name": "Authenticated",
+    "description": "Default authenticated user role",
+    "type": "authenticated",
+    "permissions": [
+      {
+        "action": "create",
+        "subject": "api::product.product",
+        "properties": {
+          "fields": [
+            "title",
+            "description",
+            "price",
+            "category",
+            "subcategory",
+            "location",
+            "images",
+            "phone",
+            "condition",
+            "negotiable"
+          ]
+        }
+      },
+      {
+        "action": "update",
+        "subject": "api::product.product",
+        "properties": {
+          "fields": [
+            "title",
+            "description",
+            "price",
+            "category",
+            "subcategory",
+            "location",
+            "images",
+            "phone",
+            "condition",
+            "negotiable",
+            "status"
+          ],
+          "filters": {
+            "owner": {
+              "$eq": "id"
+            }
+          }
+        }
+      },
+      {
+        "action": "delete",
+        "subject": "api::product.product",
+        "properties": {
+          "filters": {
+            "owner": {
+              "$eq": "id"
+            }
+          }
+        }
+      },
+      {
+        "action": "find",
+        "subject": "api::product.product"
+      },
+      {
+        "action": "findOne",
+        "subject": "api::product.product"
+      },
+      {
+        "action": "create",
+        "subject": "api::favorite.favorite"
+      },
+      {
+        "action": "delete",
+        "subject": "api::favorite.favorite",
+        "properties": {
+          "filters": {
+            "user": {
+              "$eq": "id"
+            }
+          }
+        }
+      },
+      {
+        "action": "find",
+        "subject": "api::favorite.favorite",
+        "properties": {
+          "filters": {
+            "user": {
+              "$eq": "id"
+            }
+          }
+        }
+      },
+      {
+        "action": "findOne",
+        "subject": "api::favorite.favorite"
+      },
+      {
+        "action": "create",
+        "subject": "api::chat.chat"
+      },
+      {
+        "action": "find",
+        "subject": "api::chat.chat"
+      },
+      {
+        "action": "findOne",
+        "subject": "api::chat.chat"
+      },
+      {
+        "action": "create",
+        "subject": "api::message.message"
+      },
+      {
+        "action": "find",
+        "subject": "api::message.message"
+      },
+      {
+        "action": "findOne",
+        "subject": "api::message.message"
+      },
+      {
+        "action": "create",
+        "subject": "api::report.report"
+      },
+      {
+        "action": "find",
+        "subject": "api::report.report",
+        "properties": {
+          "filters": {
+            "reporter": {
+              "$eq": "id"
+            }
+          }
+        }
+      },
+      {
+        "action": "create",
+        "subject": "api::review.review"
+      },
+      {
+        "action": "update",
+        "subject": "api::review.review",
+        "properties": {
+          "filters": {
+            "reviewer": {
+              "$eq": "id"
+            }
+          }
+        }
+      },
+      {
+        "action": "delete",
+        "subject": "api::review.review",
+        "properties": {
+          "filters": {
+            "reviewer": {
+              "$eq": "id"
+            }
+          }
+        }
+      },
+      {
+        "action": "find",
+        "subject": "api::review.review"
+      },
+      {
+        "action": "findOne",
+        "subject": "api::review.review"
+      },
+      {
+        "action": "update",
+        "subject": "plugin::users-permissions.user",
+        "properties": {
+          "fields": [
+            "firstName",
+            "lastName",
+            "phone",
+            "avatar",
+            "bio",
+            "location",
+            "website",
+            "socialLinks",
+            "preferences"
+          ],
+          "filters": {
+            "id": {
+              "$eq": "id"
+            }
+          }
+        }
+      },
+      {
+        "action": "me",
+        "subject": "plugin::users-permissions.user"
+      },
+      {
+        "action": "find",
+        "subject": "api::notification.notification",
+        "properties": {
+          "filters": {
+            "user": {
+              "$eq": "id"
+            }
+          }
+        }
+      },
+      {
+        "action": "update",
+        "subject": "api::notification.notification",
+        "properties": {
+          "fields": [
+            "read"
+          ],
+          "filters": {
+            "user": {
+              "$eq": "id"
+            }
+          }
+        }
+      },
+      {
+        "action": "find",
+        "subject": "api::tag.tag"
+      },
+      {
+        "action": "create",
+        "subject": "api::tag.tag"
+      }
+    ]
+  },
+  {
+    "name": "Moderator",
+    "description": "Content moderator role",
+    "type": "authenticated",
+    "permissions": [
+      {
+        "action": "update",
+        "subject": "api::product.product",
+        "properties": {
+          "fields": [
+            "status",
+            "moderation_notes",
+            "rejected_reason",
+            "featured"
+          ]
+        }
+      },
+      {
+        "action": "find",
+        "subject": "api::product.product"
+      },
+      {
+        "action": "findOne",
+        "subject": "api::product.product"
+      },
+      {
+        "action": "create",
+        "subject": "api::report.report"
+      },
+      {
+        "action": "update",
+        "subject": "api::report.report",
+        "properties": {
+          "fields": [
+            "status",
+            "review_notes",
+            "action_taken"
+          ]
+        }
+      },
+      {
+        "action": "find",
+        "subject": "api::report.report"
+      },
+      {
+        "action": "findOne",
+        "subject": "api::report.report"
+      },
+      {
+        "action": "update",
+        "subject": "plugin::users-permissions.user",
+        "properties": {
+          "fields": [
+            "blocked",
+            "verificationStatus"
+          ]
+        }
+      },
+      {
+        "action": "find",
+        "subject": "plugin::users-permissions.user"
+      },
+      {
+        "action": "findOne",
+        "subject": "plugin::users-permissions.user"
+      },
+      {
+        "action": "create",
+        "subject": "api::notification.notification"
+      },
+      {
+        "action": "find",
+        "subject": "api::notification.notification"
+      },
+      {
+        "action": "findOne",
+        "subject": "api::notification.notification"
+      },
+      {
+        "action": "find",
+        "subject": "api::chat.chat"
+      },
+      {
+        "action": "findOne",
+        "subject": "api::chat.chat"
+      },
+      {
+        "action": "find",
+        "subject": "api::message.message"
+      },
+      {
+        "action": "findOne",
+        "subject": "api::message.message"
+      }
+    ]
+  },
+  {
+    "name": "Admin",
+    "description": "Full administrator role",
+    "type": "authenticated",
+    "permissions": [
+      {
+        "action": "create",
+        "subject": "api::product.product"
+      },
+      {
+        "action": "update",
+        "subject": "api::product.product"
+      },
+      {
+        "action": "delete",
+        "subject": "api::product.product"
+      },
+      {
+        "action": "find",
+        "subject": "api::product.product"
+      },
+      {
+        "action": "findOne",
+        "subject": "api::product.product"
+      },
+      {
+        "action": "create",
+        "subject": "api::category.category"
+      },
+      {
+        "action": "update",
+        "subject": "api::category.category"
+      },
+      {
+        "action": "delete",
+        "subject": "api::category.category"
+      },
+      {
+        "action": "find",
+        "subject": "api::category.category"
+      },
+      {
+        "action": "findOne",
+        "subject": "api::category.category"
+      },
+      {
+        "action": "create",
+        "subject": "api::chat.chat"
+      },
+      {
+        "action": "update",
+        "subject": "api::chat.chat"
+      },
+      {
+        "action": "delete",
+        "subject": "api::chat.chat"
+      },
+      {
+        "action": "find",
+        "subject": "api::chat.chat"
+      },
+      {
+        "action": "findOne",
+        "subject": "api::chat.chat"
+      },
+      {
+        "action": "create",
+        "subject": "api::message.message"
+      },
+      {
+        "action": "update",
+        "subject": "api::message.message"
+      },
+      {
+        "action": "delete",
+        "subject": "api::message.message"
+      },
+      {
+        "action": "find",
+        "subject": "api::message.message"
+      },
+      {
+        "action": "findOne",
+        "subject": "api::message.message"
+      },
+      {
+        "action": "create",
+        "subject": "api::report.report"
+      },
+      {
+        "action": "update",
+        "subject": "api::report.report"
+      },
+      {
+        "action": "delete",
+        "subject": "api::report.report"
+      },
+      {
+        "action": "find",
+        "subject": "api::report.report"
+      },
+      {
+        "action": "findOne",
+        "subject": "api::report.report"
+      },
+      {
+        "action": "create",
+        "subject": "api::favorite.favorite"
+      },
+      {
+        "action": "update",
+        "subject": "api::favorite.favorite"
+      },
+      {
+        "action": "delete",
+        "subject": "api::favorite.favorite"
+      },
+      {
+        "action": "find",
+        "subject": "api::favorite.favorite"
+      },
+      {
+        "action": "findOne",
+        "subject": "api::favorite.favorite"
+      },
+      {
+        "action": "create",
+        "subject": "api::review.review"
+      },
+      {
+        "action": "update",
+        "subject": "api::review.review"
+      },
+      {
+        "action": "delete",
+        "subject": "api::review.review"
+      },
+      {
+        "action": "find",
+        "subject": "api::review.review"
+      },
+      {
+        "action": "findOne",
+        "subject": "api::review.review"
+      },
+      {
+        "action": "create",
+        "subject": "api::notification.notification"
+      },
+      {
+        "action": "update",
+        "subject": "api::notification.notification"
+      },
+      {
+        "action": "delete",
+        "subject": "api::notification.notification"
+      },
+      {
+        "action": "find",
+        "subject": "api::notification.notification"
+      },
+      {
+        "action": "findOne",
+        "subject": "api::notification.notification"
+      },
+      {
+        "action": "create",
+        "subject": "api::tag.tag"
+      },
+      {
+        "action": "update",
+        "subject": "api::tag.tag"
+      },
+      {
+        "action": "delete",
+        "subject": "api::tag.tag"
+      },
+      {
+        "action": "find",
+        "subject": "api::tag.tag"
+      },
+      {
+        "action": "findOne",
+        "subject": "api::tag.tag"
+      },
+      {
+        "action": "create",
+        "subject": "plugin::users-permissions.user"
+      },
+      {
+        "action": "update",
+        "subject": "plugin::users-permissions.user"
+      },
+      {
+        "action": "delete",
+        "subject": "plugin::users-permissions.user"
+      },
+      {
+        "action": "find",
+        "subject": "plugin::users-permissions.user"
+      },
+      {
+        "action": "findOne",
+        "subject": "plugin::users-permissions.user"
+      },
+      {
+        "action": "me",
+        "subject": "plugin::users-permissions.user"
+      }
+    ]
+  }
+]

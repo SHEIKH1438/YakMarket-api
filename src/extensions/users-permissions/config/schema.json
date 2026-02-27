@@ -1,0 +1,167 @@
+{
+  "kind": "collectionType",
+  "collectionName": "up_users",
+  "info": {
+    "singularName": "user",
+    "pluralName": "users",
+    "displayName": "Пользователь",
+    "description": "Пользователи YakMarket"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "username": {
+      "type": "string",
+      "minLength": 3,
+      "unique": true,
+      "configurable": false
+    },
+    "email": {
+      "type": "email",
+      "required": true,
+      "unique": true,
+      "configurable": false
+    },
+    "provider": {
+      "type": "string",
+      "configurable": false
+    },
+    "password": {
+      "type": "string",
+      "minLength": 6,
+      "configurable": false,
+      "private": true
+    },
+    "resetPasswordToken": {
+      "type": "string",
+      "configurable": false,
+      "private": true
+    },
+    "confirmationToken": {
+      "type": "string",
+      "configurable": false,
+      "private": true
+    },
+    "confirmed": {
+      "type": "boolean",
+      "default": false,
+      "configurable": false
+    },
+    "blocked": {
+      "type": "boolean",
+      "default": false,
+      "configurable": false
+    },
+    "role": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.role",
+      "configurable": false
+    },
+    "firstName": {
+      "type": "string",
+      "maxLength": 50
+    },
+    "lastName": {
+      "type": "string",
+      "maxLength": 50
+    },
+    "phone": {
+      "type": "string",
+      "regex": "^\\+?[0-9]{10,15}$"
+    },
+    "avatar": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "bio": {
+      "type": "text",
+      "maxLength": 500
+    },
+    "location": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "website": {
+      "type": "string",
+      "regex": "^https?:\\/\\/.+"
+    },
+    "socialLinks": {
+      "type": "json"
+    },
+    "verificationStatus": {
+      "type": "enumeration",
+      "enum": ["unverified", "pending", "verified"],
+      "default": "unverified"
+    },
+    "verificationDocuments": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": ["images", "files"]
+    },
+    "rating": {
+      "type": "decimal",
+      "min": 0,
+      "max": 5,
+      "default": 0
+    },
+    "totalReviews": {
+      "type": "integer",
+      "min": 0,
+      "default": 0
+    },
+    "lastLoginAt": {
+      "type": "datetime"
+    },
+    "loginCount": {
+      "type": "integer",
+      "default": 0
+    },
+    "products": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product.product",
+      "mappedBy": "owner"
+    },
+    "favorites": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::favorite.favorite",
+      "mappedBy": "user"
+    },
+    "reviews": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::review.review",
+      "mappedBy": "reviewer"
+    },
+    "reports": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::report.report",
+      "mappedBy": "reporter"
+    },
+    "notifications": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::notification.notification",
+      "mappedBy": "user"
+    },
+    "preferences": {
+      "type": "json",
+      "default": {
+        "language": "ru",
+        "theme": "light",
+        "notifications": {
+          "email": true,
+          "push": true,
+          "sms": false
+        }
+      }
+    }
+  }
+}

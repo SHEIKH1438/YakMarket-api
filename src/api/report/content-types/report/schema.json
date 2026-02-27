@@ -1,0 +1,53 @@
+{
+  "kind": "collectionType",
+  "collectionName": "reports",
+  "info": {
+    "singularName": "report",
+    "pluralName": "reports",
+    "displayName": "Жалоба",
+    "description": "Жалобы на товары и пользователей"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "reason": {
+      "type": "enumeration",
+      "enum": ["spam", "inappropriate", "fraud", "duplicate", "copyright", "other"],
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true,
+      "maxLength": 1000,
+      "minLength": 10
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending", "reviewing", "resolved", "dismissed"],
+      "default": "pending"
+    },
+    "product": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product.product"
+    },
+    "reporter": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "reviewer": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "review_notes": {
+      "type": "text"
+    },
+    "action_taken": {
+      "type": "enumeration",
+      "enum": ["none", "warning", "suspension", "deletion", "ban"]
+    }
+  }
+}
