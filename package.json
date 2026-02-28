@@ -12,6 +12,7 @@
     "@strapi/strapi": "4.25.1",
     "@strapi/plugin-users-permissions": "4.25.1",
     "@strapi/provider-upload-cloudinary": "4.25.1",
+    "strapi-provider-email-resend": "^1.0.1",
     "socket.io": "^4.7.2",
     "pg": "8.11.3",
     "bcryptjs": "^2.4.3",
