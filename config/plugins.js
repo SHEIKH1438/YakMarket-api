@@ -1,10 +1,15 @@
 module.exports = ({ env }) => ({
-  upload: {
+  email: {
     config: {
-      provider: 'cloudinary',
+      provider: 'strapi-provider-email-resend',
       providerOptions: {
-        cloudinary_url: env('CLOUDINARY_URL'),
+        apiKey: env('RESEND_API_KEY'),
+      },
+      settings: {
+        defaultFrom: env('EMAIL_FROM'),
+        defaultReplyTo: env('EMAIL_FROM'),
       },
     },
   },
+  // ... твои остальные плагины (cloudinary и т.д.)
 });
