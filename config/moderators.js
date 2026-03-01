@@ -1,19 +1,12 @@
 /**
- * ⚠️ КОНФИДЕНЦИАЛЬНО: База данных модераторов YakMarket
- * Доступ только через проверку ID в системе
+ * ⚠️ КОНФИДЕНЦИАЛЬНО: База данных персонала YakMarket
  */
-
-const crypto = require('crypto');
-
-// Хеш для проверки целостности (простая защита от случайных изменений)
-const MODERATORS_HASH = 'ym_moderators_v1';
 
 const MODERATORS = [
     {
         id: '8012802187',
         name: 'SheikhK2',
         role: 'admin',
-        permissions: ['all', 'admin', 'moderate', 'ban', 'warn', 'stats', 'user_info'],
         phone: '+992110058686',
         isAvailable: true,
         joinedAt: '2024-01-01',
@@ -23,7 +16,6 @@ const MODERATORS = [
         id: '1234567890',
         name: 'Moderator_1',
         role: 'moderator',
-        permissions: ['moderate', 'stats', 'user_info'],
         phone: '+992000000001',
         isAvailable: true,
         joinedAt: '2024-03-01',
@@ -33,7 +25,6 @@ const MODERATORS = [
         id: '2345678901',
         name: 'Moderator_2',
         role: 'moderator',
-        permissions: ['moderate', 'stats', 'user_info'],
         phone: '+992000000002',
         isAvailable: true,
         joinedAt: '2024-03-01',
@@ -43,7 +34,6 @@ const MODERATORS = [
         id: '3456789012',
         name: 'Moderator_3',
         role: 'moderator',
-        permissions: ['moderate', 'stats'],
         phone: '+992000000003',
         isAvailable: false,
         joinedAt: '2024-03-01',
@@ -51,10 +41,31 @@ const MODERATORS = [
     }
 ];
 
-// Функции для работы с модераторами
-module.exports = {
-    _hash: MODERATORS_HASH,
+// Команды для обычных пользователей (никакие)
+const USER_COMMANDS = [];
 
+// Команды для модераторов
+const MODERATOR_COMMANDS = [
+    'start',        // Приветствие
+    'pending',      // Список товаров
+    'approve',      // Принять товар
+    'reject',       // Отклонить товар
+    'user',         // Инфо о пользователе
+    'stats',        // Личная статистика
+    'help'          // Справка
+];
+
+// Команды только для админа
+const ADMIN_COMMANDS = [
+    'ban',          // Забанить пользователя
+    'warn',         // Выдать предупреждение
+    'admin'         // Панель администратора
+];
+
+// Все команды админа
+const ALL_ADMIN_COMMANDS = [...MODERATOR_COMMANDS, ...ADMIN_COMMANDS];
+
+module.exports = {
     // Получить всех модераторов
     getAll() {
         return MODERATORS;
@@ -67,21 +78,39 @@ module.exports = {
 
     // Проверить является ли пользователь модератором
     isModerator(id) {
-        return MODERATORS.some(m => m.id === String(id));
+        return MODERATORS.some(m => m.id === String(id) && m.role === 'moderator');
     },
 
     // Проверить является ли админом
     isAdmin(id) {
-        const mod = this.getById(id);
-        return mod && mod.role === 'admin';
+        return MODERATORS.some(m => m.id === String(id) && m.role === 'admin');
     },
 
-    // Проверить разрешение
-    hasPermission(id, permission) {
-        const mod = this.getById(id);
-        if (!mod) return false;
-        if (mod.role === 'admin') return true;
-        return mod.permissions.includes(permission);
+    // Проверить имеет ли пользователь доступ к команде
+    canUseCommand(userId, command) {
+        // Если админ - может использовать ЛЮБУЮ команду
+        if (this.isAdmin(userId)) {
+            return true;
+        }
+
+        // Если модератор - только модераторские команды
+        if (this.isModerator(userId)) {
+            return MODERATOR_COMMANDS.includes(command);
+        }
+
+        // Обычный пользователь - нет доступа
+        return false;
+    },
+
+    // Получить список доступных команд для пользователя
+    getAvailableCommands(userId) {
+        if (this.isAdmin(userId)) {
+            return ALL_ADMIN_COMMANDS;
+        }
+        if (this.isModerator(userId)) {
+            return MODERATOR_COMMANDS;
+        }
+        return USER_COMMANDS;
     },
 
     // Получить доступных модераторов
@@ -107,5 +136,16 @@ module.exports = {
             default: return false;
         }
         return true;
+    },
+
+    // Получить общую статистику всех модераторов
+    getTotalStats() {
+        return MODERATORS.reduce((acc, mod) => {
+            acc.accepted += mod.stats.accepted;
+            acc.rejected += mod.stats.rejected;
+            acc.warnings += mod.stats.warnings;
+            acc.banned += mod.stats.banned;
+            return acc;
+        }, { accepted: 0, rejected: 0, warnings: 0, banned: 0 });
     }
 };
