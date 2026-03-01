@@ -1,16 +1,15 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
  * 📦 LIFECYCLES: Product Collection
- * Интеграция с YakMarket Moderation System
+ * Мгновенные уведомления в Telegram при создании объявления
  * ═══════════════════════════════════════════════════════════════════
  */
 
 'use strict';
 
 const axios = require('axios');
-const ModeratorsDB = require('../../../../config/moderators');
 
-// Конфигурация
+// Конфигурация Telegram
 const CONFIG = {
     BOT_TOKEN: '8662410817:AAEPg37YkiJ6XnfnpmDW_fg1kp0hsz2_Eh0',
     API_BASE: 'https://api.telegram.org/bot',
@@ -19,33 +18,13 @@ const CONFIG = {
 
 const TELEGRAM_API = `${CONFIG.API_BASE}${CONFIG.BOT_TOKEN}`;
 
-/**
- * Форматирование данных товара для модерации
- */
-function formatProductForModeration(product, seller) {
-    return {
-        id: `PROD_${product.id}`,
-        strapiId: product.id,
-        title: product.title || 'Без названия',
-        description: product.description || 'Нет описания',
-        price: product.price || 0,
-        currency: product.currency || 'TJS',
-        category: product.category?.name || product.category || 'Без категории',
-        location: product.location || product.city || 'Не указано',
-        images: product.images?.length || 0,
-        createdAt: product.createdAt || new Date().toISOString(),
-        status: 'pending',
-        seller: {
-            id: `USER_${seller?.id || 'unknown'}`,
-            strapiId: seller?.id,
-            name: seller?.username || seller?.fullName || seller?.email || 'Пользователь',
-            phone: seller?.phone || 'Не указан',
-            telegram: seller?.telegramUsername || null,
-            rating: seller?.rating || 0,
-            joinedAt: seller?.createdAt || 'Неизвестно'
-        }
-    };
-}
+// Модераторы для уведомлений
+const MODERATORS = [
+    { id: '8012802187', name: 'SheikhK2' },
+    { id: '1234567890', name: 'Moderator_1' },
+    { id: '2345678901', name: 'Moderator_2' },
+    { id: '3456789012', name: 'Moderator_3' }
+];
 
 /**
  * Отправка сообщения в Telegram
@@ -66,7 +45,7 @@ async function sendTelegramMessage(chatId, text, buttons = null) {
         const response = await axios.post(`${TELEGRAM_API}/sendMessage`, payload);
         return response.data;
     } catch (err) {
-        console.error(`[Telegram] Ошибка отправки для ${chatId}:`, err.response?.data?.description || err.message);
+        console.error(`[Telegram] Ошибка для ${chatId}:`, err.response?.data?.description || err.message);
         return null;
     }
 }
@@ -74,210 +53,169 @@ async function sendTelegramMessage(chatId, text, buttons = null) {
 /**
  * Форматирование карточки товара
  */
-function formatProductCard(product) {
-    return `
-⚡️ <b>НОВОЕ ОБЪЯВЛЕНИЕ</b> ⚡️
+function formatProductNotification(product, seller) {
+    const adminUrl = `${CONFIG.STRAPI_URL}/admin/content-manager/collectionType/api::product.product/${product.id}`;
 
-📦 <b>${product.title}</b>
+    return {
+        text: `⚡️ <b>НОВОЕ ОБЪЯВЛЕНИЕ!</b> ⚡️\n\n` +
+            `📦 <b>${product.title || 'Без названия'}</b>\n\n` +
+            `💰 <b>Цена:</b> ${product.price || 0} ${product.currency || 'TJS'}\n` +
+            `📂 <b>Категория:</b> ${product.category?.name || product.category || 'Без категории'}\n` +
+            `📍 <b>Локация:</b> ${product.location || product.city || 'Не указано'}\n\n` +
+            `👤 <b>Продавец:</b> ${seller?.username || seller?.email || 'Неизвестно'}\n` +
+            `📱 <b>Телефон:</b> ${seller?.phone || 'Не указан'}\n` +
+            `📧 <b>Email:</b> ${seller?.email || 'Н/Д'}\n\n` +
+            `🆔 <code>PROD_${product.id}</code>\n\n` +
+            `<a href="${adminUrl}">🔗 Открыть в админке</a>`,
 
-💰 <b>Цена:</b> ${product.price} ${product.currency}
-📂 <b>Категория:</b> ${product.category}
-📍 <b>Локация:</b> ${product.location}
-📸 <b>Фото:</b> ${product.images} шт.
-
-👤 <b>Продавец:</b> ${product.seller.name}
-📱 <b>Телефон:</b> ${product.seller.phone}
-📧 <b>Telegram:</b> ${product.seller.telegram || 'Н/Д'}
-⭐ <b>Рейтинг:</b> ${product.seller.rating}/5
-
-🔗 <a href="${CONFIG.STRAPI_URL}/admin/content-manager/collectionType/api::product.product/${product.strapiId}">ОТКРЫТЬ В АДМИНКЕ</a>
-
-🆔 <code>${product.id}</code>
-    `.trim();
-}
-
-/**
- * Inline кнопки для модерации
- */
-function getModerationButtons(productId) {
-    return [
-        [
-            { text: '✅ Принять', callback_data: `approve_${productId}` },
-            { text: '❌ Отклонить', callback_data: `reject_${productId}` }
-        ],
-        [
-            { text: '👤 Продавец', callback_data: `user_${productId}` },
-            { text: '📋 Детали', callback_data: `details_${productId}` }
+        buttons: [
+            [
+                { text: '✅ Принять', callback_data: `approve_PROD_${product.id}` },
+                { text: '❌ Отклонить', callback_data: `reject_PROD_${product.id}` }
+            ],
+            [
+                { text: '👤 Инфо о продавце', callback_data: `user_PROD_${product.id}` },
+                { text: '🚫 Забанить', callback_data: `ban_PROD_${product.id}` }
+            ]
         ]
-    ];
+    };
 }
 
 /**
- * Уведомление продавца о статусе
+ * Уведомление о смене статуса
  */
-async function notifySeller(product, status, reason = null) {
-    // В реальной системе здесь отправка уведомления продавцу
-    // Для этого нужно иметь telegram_id в профиле пользователя
-    console.log(`[NotifySeller] Product ${product.id} ${status}${reason ? ', reason: ' + reason : ''}`);
+async function notifyStatusChange(product, seller, status, reason = null) {
+    console.log(`[Notify] Статус товара ${product.id} изменён на ${status}`);
 
-    // Если у продавца есть telegram ID - отправляем уведомление
-    if (product.seller.telegram) {
-        let message = '';
-
-        if (status === 'approved') {
-            message = `
-✅ <b>Ваше объявление одобрено!</b>
-
-📦 ${product.title}
-💰 ${product.price} ${product.currency}
-
-Теперь оно видно всем пользователям.
-            `.trim();
-        } else if (status === 'rejected') {
-            message = `
-❌ <b>Ваше объявление отклонено</b>
-
-📦 ${product.title}
-📝 Причина: ${reason || 'Нарушение правил'}
-
-Вы можете отредактировать и отправить снова.
-            `.trim();
-        }
-
-        // Здесь должен быть реальный ID продавца в Telegram
-        // Пока просто логируем
-        if (message) {
-            console.log(`[NotifySeller] Message ready for ${product.seller.telegram}`);
-        }
-    }
+    // Здесь можно добавить отправку уведомления продавцу
+    // если у него есть telegram_id в профиле
 }
 
 module.exports = {
 
     /**
-     * После создания товара - отправка на модерацию
+     * ПЕРЕД СОЗДАНИЕМ - установка статуса pending
+     */
+    async beforeCreate(event) {
+        const { data } = event.params;
+
+        // Все новые товары требуют модерации
+        data.status = 'pending';
+        data.publishedAt = null; // Не публикуем сразу
+
+        console.log(`[Lifecycle] Новый товар отправляется на модерацию`);
+    },
+
+    /**
+     * ПОСЛЕ СОЗДАНИЯ - мгновенное уведомление в Telegram
      */
     async afterCreate(event) {
         const { result } = event;
         const strapiInstance = event.state?.strapi || global.strapi || strapi;
 
-        // 1. Отправка в WebSocket (для реалтайм обновлений)
+        console.log(`✅ [Lifecycle] Товар создан: ${result.id} - ${result.title}`);
+
+        // 1. WebSocket уведомление
         if (strapiInstance.io) {
-            strapiInstance.io.emit('product:create', result);
+            strapiInstance.io.emit('product:create', {
+                id: result.id,
+                title: result.title,
+                status: 'pending'
+            });
         }
 
+        // 2. МГНОВЕННАЯ ОТПРАВКА В TELEGRAM
         try {
-            // 2. Получаем данные продавца
+            // Получаем данные продавца
             let seller = null;
             if (result.owner) {
                 if (typeof result.owner === 'object') {
                     seller = result.owner;
                 } else {
-                    // Загружаем из БД если только ID
                     seller = await strapiInstance.db.query('plugin::users-permissions.user').findOne({
                         where: { id: result.owner }
                     });
                 }
             }
 
-            // 3. Форматируем товар для модерации
-            const productForModeration = formatProductForModeration(result, seller);
+            // Формируем уведомление
+            const notification = formatProductNotification(result, seller);
 
-            // 4. Добавляем в систему модерации (если она запущена)
-            if (strapiInstance.moderation && strapiInstance.moderation.addProduct) {
-                await strapiInstance.moderation.addProduct(productForModeration);
-                console.log(`✅ [Lifecycle] Товар ${result.id} отправлен в систему модерации`);
-            } else {
-                // Fallback: отправляем напрямую модераторам
-                console.log(`⚠️ [Lifecycle] Система модерации не запущена, отправка вручную...`);
-
-                const moderators = ModeratorsDB.getAvailable();
-                const cardText = formatProductCard(productForModeration);
-                const buttons = getModerationButtons(productForModeration.id);
-
-                for (const mod of moderators) {
-                    await sendTelegramMessage(mod.id, cardText, buttons);
-                    await new Promise(r => setTimeout(r, 200));
+            // Отправляем всем модераторам ПАРАЛЛЕЛЬНО (мгновенно)
+            const sendPromises = MODERATORS.map(async (mod) => {
+                try {
+                    await sendTelegramMessage(mod.id, notification.text, notification.buttons);
+                    console.log(`✅ [Telegram] Уведомление отправлено: ${mod.name}`);
+                } catch (err) {
+                    console.error(`❌ [Telegram] Ошибка ${mod.name}:`, err.message);
                 }
+            });
+
+            // Ждём все отправки
+            await Promise.all(sendPromises);
+            console.log(`✅ [Lifecycle] Уведомления отправлены в Telegram`);
+
+            // 3. Добавляем в систему модерации (если она запущена)
+            if (strapiInstance.moderation?.addProduct) {
+                const productForModeration = {
+                    id: `PROD_${result.id}`,
+                    strapiId: result.id,
+                    title: result.title,
+                    description: result.description,
+                    price: result.price,
+                    currency: result.currency || 'TJS',
+                    category: result.category?.name || result.category,
+                    location: result.location || result.city,
+                    images: result.images?.length || 0,
+                    createdAt: result.createdAt,
+                    status: 'pending',
+                    seller: {
+                        id: `USER_${seller?.id}`,
+                        name: seller?.username || seller?.email || 'Пользователь',
+                        phone: seller?.phone || 'Не указан',
+                        email: seller?.email
+                    }
+                };
+
+                await strapiInstance.moderation.addProduct(productForModeration);
             }
 
         } catch (err) {
-            console.error('❌ [Lifecycle] Ошибка отправки на модерацию:', err.message);
+            console.error('❌ [Lifecycle] Ошибка отправки:', err.message);
         }
     },
 
     /**
-     * После обновления товара - уведомление о статусе
+     * ПОСЛЕ ОБНОВЛЕНИЯ - уведомление о смене статуса
      */
     async afterUpdate(event) {
         const { result, params } = event;
         const strapiInstance = event.state?.strapi || global.strapi || strapi;
 
-        // Отправка в WebSocket
+        // WebSocket
         if (strapiInstance.io) {
             strapiInstance.io.emit('product:update', result);
         }
 
         // Проверяем изменение статуса
-        const oldStatus = params.data?.status || result.status;
+        const previousStatus = params.data?.status;
         const newStatus = result.status;
 
-        if (oldStatus !== newStatus) {
-            console.log(`[Lifecycle] Статус товара ${result.id} изменён: ${oldStatus} → ${newStatus}`);
+        if (previousStatus !== newStatus) {
+            console.log(`[Lifecycle] Статус: ${previousStatus} → ${newStatus}`);
 
-            // Если статус изменился на 'active' - уведомляем продавца
             if (newStatus === 'active') {
-                try {
-                    let seller = null;
-                    if (result.owner) {
-                        seller = typeof result.owner === 'object' ? result.owner :
-                            await strapiInstance.db.query('plugin::users-permissions.user').findOne({
-                                where: { id: result.owner }
-                            });
-                    }
-
-                    const product = formatProductForModeration(result, seller);
-                    await notifySeller(product, 'approved');
-
-                    console.log(`✅ [Lifecycle] Продавец уведомлён об одобрении товара ${result.id}`);
-                } catch (err) {
-                    console.error('❌ [Lifecycle] Ошибка уведомления продавца:', err.message);
-                }
-            }
-
-            // Если статус 'rejected' - уведомляем с причиной
-            if (newStatus === 'rejected') {
-                try {
-                    let seller = null;
-                    if (result.owner) {
-                        seller = typeof result.owner === 'object' ? result.owner :
-                            await strapiInstance.db.query('plugin::users-permissions.user').findOne({
-                                where: { id: result.owner }
-                            });
-                    }
-
-                    const product = formatProductForModeration(result, seller);
-                    const reason = result.rejectReason || 'Не соответствует правилам';
-                    await notifySeller(product, 'rejected', reason);
-
-                    console.log(`✅ [Lifecycle] Продавец уведомлён об отклонении товара ${result.id}`);
-                } catch (err) {
-                    console.error('❌ [Lifecycle] Ошибка уведомления продавца:', err.message);
-                }
+                // Товар одобрен
+                await notifyStatusChange(result, null, 'approved');
+            } else if (newStatus === 'rejected') {
+                // Товар отклонён
+                await notifyStatusChange(result, null, 'rejected', result.rejectReason);
             }
         }
     },
 
     /**
-     * Перед удалением - можно добавить логику
-     */
-    async beforeDelete(event) {
-        const { params } = event;
-        console.log(`[Lifecycle] Удаление товара: ${params.where?.id}`);
-    },
-
-    /**
-     * После удаления - очистка
+     * ПОСЛЕ УДАЛЕНИЯ
      */
     async afterDelete(event) {
         const { result } = event;
