@@ -2,44 +2,18 @@
  * ⚠️ КОНФИДЕНЦИАЛЬНО: База данных персонала YakMarket
  */
 
-const MODERATORS = [
-    {
-        id: '8012802187',
-        name: 'SheikhK2',
-        role: 'admin',
-        phone: '+992110058686',
-        isAvailable: true,
-        joinedAt: '2024-01-01',
-        stats: { accepted: 0, rejected: 0, warnings: 0, banned: 0 }
-    },
-    {
-        id: '1234567890',
-        name: 'Moderator_1',
-        role: 'moderator',
-        phone: '+992000000001',
-        isAvailable: true,
-        joinedAt: '2024-03-01',
-        stats: { accepted: 0, rejected: 0, warnings: 0, banned: 0 }
-    },
-    {
-        id: '2345678901',
-        name: 'Moderator_2',
-        role: 'moderator',
-        phone: '+992000000002',
-        isAvailable: true,
-        joinedAt: '2024-03-01',
-        stats: { accepted: 0, rejected: 0, warnings: 0, banned: 0 }
-    },
-    {
-        id: '3456789012',
-        name: 'Moderator_3',
-        role: 'moderator',
-        phone: '+992000000003',
-        isAvailable: false,
-        joinedAt: '2024-03-01',
-        stats: { accepted: 0, rejected: 0, warnings: 0, banned: 0 }
-    }
-];
+const modsEnv = process.env.ADMIN_IDS || '8012802187';
+const adminIds = modsEnv.split(',').map(id => id.trim());
+
+const MODERATORS = adminIds.map((id, index) => ({
+    id: id,
+    name: index === 0 ? 'SheikhK2' : `Moderator_${index}`,
+    role: index === 0 ? 'admin' : 'moderator',
+    phone: index === 0 ? '+992110058686' : '',
+    isAvailable: true,
+    joinedAt: new Date().toISOString().split('T')[0],
+    stats: { accepted: 0, rejected: 0, warnings: 0, banned: 0 }
+}));
 
 // Команды для обычных пользователей (никакие)
 const USER_COMMANDS = [];
