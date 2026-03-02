@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YakMarket - Поиск</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="clock.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
+    <script src="js/navigation.js"></script>
+    <script src="theme.js"></script>
+    <script src="js/locations.js"></script>
+    <script src="js/strapi-client.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/toast-notifications.js"></script>
+    <script src="js/cloudinary-config.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+    <script>
+            (function () {
+                const savedTheme = localStorage.getItem('theme');
+                const isDark = savedTheme === 'dark' || (!savedTheme && true);
+                if (isDark) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            })();
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
+
+    .hidden-state {
+    display: none;
+    }
+    </style>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+</head>
+
+<body
+    class="bg-white dark:bg-[#121212] text-gray-900 dark:text-white overflow-x-hidden min-h-screen flex flex-col transition-colors duration-300">
+    <!-- Header - Same as Dashboard -->
+    <header
+        class="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-[#212121] border-b border-gray-200 dark:border-white/5 shadow-sm h-16">
+        <div class="max-w-[1600px] mx-auto px-4 md:px-6 h-full flex items-center justify-between">
+            <div class="flex-shrink-0 flex items-center">
+                <a href="dashboard.html" class="flex items-center gap-3">
+                    <svg class="w-8 h-8 md:w-9 md:h-9 flex-shrink-0" viewBox="0 0 64 64" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <rect width="64" height="64" rx="16" class="fill-black dark:fill-white" />
+                        <circle cx="32" cy="32" r="23" stroke-width="4" class="stroke-white dark:stroke-black" />
+                        <text x="32" y="41" font-family="Arial, sans-serif" font-weight="bold" font-size="36"
+                            text-anchor="middle" class="fill-white dark:fill-black">y</text>
+                    </svg>
+                    <span
+                        class="text-lg md:text-xl font-black tracking-tesla uppercase text-black dark:text-white whitespace-nowrap">YAKMARKET.TJ</span>
+                </a>
+            </div>
+            <div class="flex items-center gap-1">
+                <button onclick="toggleTheme()" class="nav-item p-2 rounded-full text-gray-600 dark:text-gray-300">
+                    <i data-lucide="sun" class="block dark:hidden lucide"></i>
+                    <i data-lucide="moon" class="hidden dark:block lucide"></i>
+                </button>
+                <a href="dashboard.html" class="nav-item p-2 rounded-full text-gray-600 dark:text-gray-300">
+                    <i data-lucide="home" class="lucide"></i>
+                </a>
+                <a href="favorites.html" class="nav-item p-2 rounded-full text-gray-600 dark:text-gray-300">
+                    <i data-lucide="heart" class="lucide"></i>
+                </a>
+                <a href="categories.html" class="nav-item p-2 rounded-full text-gray-600 dark:text-gray-300">
+                    <i data-lucide="layout-grid" class="lucide"></i>
+                </a>
+                <a href="chat.html" class="nav-item p-2 rounded-full text-gray-600 dark:text-gray-300">
+                    <i data-lucide="message-circle" class="lucide"></i>
+                </a>
+                <a href="settings.html" class="nav-item p-2 rounded-full text-gray-600 dark:text-gray-300">
+                    <i data-lucide="user" class="lucide" id="header-user-icon"></i>
+                    <img id="header-user-avatar" src="" class="w-6 h-6 rounded-full object-cover hidden" alt="Avatar">
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-[1600px] mx-auto px-4 md:px-6 pt-24 pb-20 w-full flex-grow">
+        <!-- Content Area -->
+        <div class="flex-grow">
+            <!-- Mobile/Desktop Search & Filter Header -->
+            <div class="flex flex-col sm:flex-row gap-3 md:gap-4 mb-10 items-stretch">
+                <!-- Filters Button -->
+                <button onclick="openFilterModal()"
+                    class="flex items-center justify-center gap-3 bg-gray-50 dark:bg-[#1a1a1a] px-6 py-4 rounded-3xl border border-gray-100 dark:border-white/5 font-black text-sm hover:scale-[1.02] active:scale-[0.98] transition-all group whitespace-nowrap">
+                    <i data-lucide="sliders-horizontal" class="w-5 h-5 group-hover:rotate-12 transition-transform"></i>
+                    <span class="uppercase tracking-widest hidden sm:inline">Фильтры</span>
+                    <span class="uppercase tracking-widest sm:hidden">Фильтры</span>
+                    <span id="activeFiltersBadge"
+                        class="hidden w-5 h-5 bg-black dark:bg-white text-white dark:text-black rounded-full text-[10px] items-center justify-center">0</span>
+                </button>
+
+                <!-- Search Input Wrapper -->
+                <div class="relative flex-grow group">
+                    <input type="text" id="searchInput"
+                        class="w-full bg-gray-100 dark:bg-[#1a1a1a] border-2 border-transparent focus:border-black dark:focus:border-white rounded-2xl py-4 pl-6 pr-24 text-gray-900 dark:text-white transition-all outline-none text-lg shadow-sm group-hover:shadow-md"
+                        placeholder="Поиск товаров..." autocomplete="off"
+                        onkeypress="if(event.key === 'Enter') performSearch()">
+
+                    <button id="clearSearchBtn"
+                        class="absolute right-16 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500 hidden transition-colors"
+                        onclick="clearSearch()">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+
+                    <button
+                        class="absolute right-2 top-1/2 -translate-y-1/2 bg-black dark:bg-white text-white dark:text-black p-2.5 rounded-xl hover:opacity-80 transition-all active:scale-95"
+                        onclick="performSearch()">
+                        <i data-lucide="search" class="w-5 h-5"></i>
+                    </button>
+
+                    <!-- History Dropdown -->
+                    <div id="searchHistoryDropdown"
+                        class="hidden absolute top-full left-0 right-0 mt-3 bg-white dark:bg-[#1a1a1a] rounded-3xl shadow-2xl border border-gray-100 dark:border-white/5 z-50 overflow-hidden">
+                        <!-- JS populated -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div id="searchResultsSection">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-2xl font-black uppercase tracking-tight text-gray-900 dark:text-white">Объявления
+                    </h2>
+                    <span id="resultsCount" class="text-xs font-bold text-gray-400 tracking-widest uppercase">0
+                        товаров</span>
+                </div>
+                <div id="resultsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <!-- Items -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="emptyState"
+                    class="hidden flex-col items-center justify-center py-20 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div
+                        class="w-24 h-24 bg-gray-50 dark:bg-white/5 rounded-full flex items-center justify-center mb-6">
+                        <i data-lucide="search-x" class="w-10 h-10 text-gray-400"></i>
+                    </div>
+                    <h2 class="text-xl font-black uppercase tracking-tight mb-2">По вашему запросу ничего не найдено
+                    </h2>
+                    <p class="text-gray-500 dark:text-gray-400 max-w-sm mb-8 text-sm">Попробуйте изменить параметры
+                        поиска или фильтры.</p>
+                    <button onclick="resetFilters()"
+                        class="bg-black dark:bg-white text-white dark:text-black px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all">
+                        Сбросить фильтры
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Filter Modal -->
+    <div id="filterModal"
+        class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-md items-center justify-center p-4">
+        <div
+            class="bg-white dark:bg-[#1a1a1a] w-full max-w-lg rounded-[40px] shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 duration-300">
+            <!-- Modal Header -->
+            <div class="p-8 border-b border-gray-100 dark:border-white/5 flex items-center justify-between">
+                <div>
+                    <h3 class="text-xl font-black uppercase tracking-tight">Фильтры</h3>
+                    <p class="text-xs text-gray-400 font-bold tracking-widest mt-1">Настройте параметры поиска</p>
+                </div>
+                <button onclick="closeFilterModal()"
+                    class="w-12 h-12 bg-gray-100 dark:bg-white/5 rounded-2xl flex items-center justify-center hover:rotate-90 transition-all duration-300">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="flex-1 overflow-y-auto p-8 space-y-10 custom-scrollbar">
+                <!-- Location Section -->
+                <div>
+                    <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-6">Район / Рынок</h4>
+                    <div class="grid grid-cols-2 gap-3" id="locationFilterList">
+                        <!-- JS Loaded -->
+                    </div>
+                </div>
+
+                <!-- Nested Location Fields -->
+                <div id="nestedLocationFields" class="grid grid-cols-2 gap-4 hidden">
+                    <!-- Dynamic fields for Korvon/Sultoni Kabir injected here -->
+                </div>
+
+                <!-- Price Range -->
+                <div>
+                    <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-6">Ценовой диапазон
+                        (TJS)</h4>
+                    <div class="flex items-center gap-4">
+                        <input type="number" id="minPrice" placeholder="От"
+                            class="flex-1 bg-gray-50 dark:bg-white/5 border-2 border-transparent focus:border-black dark:focus:border-white rounded-2xl p-4 text-sm font-bold transition-all outline-none">
+                        <div class="w-4 h-0.5 bg-gray-300 dark:bg-white/20"></div>
+                        <input type="number" id="maxPrice" placeholder="До"
+                            class="flex-1 bg-gray-50 dark:bg-white/5 border-2 border-transparent focus:border-black dark:focus:border-white rounded-2xl p-4 text-sm font-bold transition-all outline-none">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-8 border-t border-gray-100 dark:border-white/5 flex gap-4">
+                <button onclick="resetFilters()"
+                    class="flex-1 py-4 text-sm font-black uppercase tracking-widest text-gray-400 hover:text-red-500 transition-colors">Сбросить</button>
+                <button onclick="applyFilters()"
+                    class="flex-[2] bg-black dark:bg-white text-white dark:text-black py-4 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all">Применить</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Use global YakStrapi and ProductsAPI
+
+        // --- THEME & SETUP ---
+        window.toggleTheme = function () {
+            window.YakTheme.toggle();
+        }
+
+        // --- STATE ---
+        let allProducts = [];
+        let filteredProducts = [];
+        let searchHistory = JSON.parse(localStorage.getItem('yak_search_history') || '[]');
+        let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+
+        let activeFilters = {
+            query: '',
+            category: '',
+            location: '',
+            minPrice: 0,
+            maxPrice: Infinity
+        };
+
+
+        // --- DOM ELEMENTS ---
+        const searchInput = document.getElementById('searchInput');
+        const clearBtn = document.getElementById('clearSearchBtn');
+        const historyDropdown = document.getElementById('searchHistoryDropdown');
+        const grid = document.getElementById('resultsGrid');
+        const emptyState = document.getElementById('emptyState');
+        const resultsCountUI = document.getElementById('resultsCount');
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+
+            // Render Filters
+            renderLocationFilters();
+
+            // Load all products from Strapi
+            try {
+                if (!window.YakStrapi) throw new Error('Strapi client not initialized');
+
+                const products = await window.YakStrapi.getProducts();
+                allProducts = products.map(item => ({
+                    id: item.id,
+                    ...item.attributes
+                }));
+            } catch (err) {
+                console.error('Error loading products:', err);
+                if (window.YakErrorHandler) {
+                    window.YakErrorHandler.handle(err);
+                }
+            }
+
+            // Handle URL params
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('q')) activeFilters.query = params.get('q');
+            if (params.get('cat')) activeFilters.category = params.get('cat');
+            if (params.get('category')) activeFilters.category = params.get('category');
+            if (params.get('location')) activeFilters.location = params.get('location');
+
+            searchInput.value = activeFilters.query;
+            if (activeFilters.query) clearBtn.classList.remove('hidden');
+
+            applyFilters();
+        });
+
+        // --- RENDERERS ---
+        function renderLocationFilters() {
+            const list = document.getElementById('locationFilterList');
+            if (!list || !window.YakLocations) return;
+
+            const locations = window.YakLocations.getNames();
+            list.innerHTML = locations.map(c => `
+                <button onclick="setActiveLocation('${c}')" class="p-4 border-2 ${activeFilters.location === c ? 'border-black dark:border-white bg-black/5 dark:bg-white/5' : 'border-gray-100 dark:border-white/5'} rounded-2xl hover:border-black dark:hover:border-white transition-all text-xs font-bold text-left">
+                    ${c}
+                </button>
+            `).join('');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        window.setActiveLocation = (loc) => {
+            activeFilters.location = loc;
+            renderLocationFilters();
+            renderNestedLocationFields(loc);
+        };
+
+        function renderNestedLocationFields(marketName) {
+            const container = document.getElementById('nestedLocationFields');
+            if (!container || !window.YakLocations) return;
+
+            const fields = window.YakLocations.getFields(marketName);
+
+            container.innerHTML = '';
+            if (fields.length > 0) {
+                container.classList.remove('hidden');
+                fields.forEach(f => {
+                    container.innerHTML += `
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black uppercase tracking-tight text-gray-400">${f.label}</label>
+                            <input type="text" id="filter-loc-${f.id}" placeholder="${f.placeholder}"
+                                class="w-full bg-gray-50 dark:bg-white/5 border-2 border-transparent focus:border-black dark:focus:border-white rounded-2xl p-4 text-sm font-bold transition-all outline-none">
+                        </div>
+                    `;
+                });
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+
+        window.closeFilterModal = () => {
+            const modal = document.getElementById('filterModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+            document.body.style.overflow = '';
+        };
+
+        window.openFilterModal = () => {
+            const modal = document.getElementById('filterModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+            document.body.style.overflow = 'hidden';
+        };
+
+        // --- SEARCH CORE ---
+        window.performSearch = () => {
+            activeFilters.query = searchInput.value.trim();
+            saveHistory(activeFilters.query);
+            applyFilters();
+            historyDropdown.classList.add('hidden');
+        };
+
+        window.applyFilters = () => {
+            const minInput = document.getElementById('minPrice');
+            const maxInput = document.getElementById('maxPrice');
+
+            if (minInput) activeFilters.minPrice = parseFloat(minInput.value) || 0;
+            if (maxInput) activeFilters.maxPrice = parseFloat(maxInput.value) || Infinity;
+
+            // Collect nested location filter values
+            const nestedValues = {};
+            if (activeFilters.location && window.YakLocations) {
+                const fields = window.YakLocations.getFields(activeFilters.location);
+                fields.forEach(f => {
+                    const val = document.getElementById('filter-loc-' + f.id)?.value.toLowerCase();
+                    if (val) nestedValues[f.id] = val;
+                });
+            }
+
+            filteredProducts = allProducts.filter(p => {
+                const q = activeFilters.query.toLowerCase();
+                const matchesQuery = !q || (p.title && p.title.toLowerCase().includes(q)) || (p.description && p.description.toLowerCase().includes(q));
+                const matchesLocation = !activeFilters.location || p.location === activeFilters.location;
+                const matchesCategory = !activeFilters.category || p.category === activeFilters.category;
+
+                // Matches nested location details
+                let matchesNested = true;
+                if (activeFilters.location && Object.keys(nestedValues).length > 0) {
+                    if (!p.locationDetails) matchesNested = false;
+                    else {
+                        for (const key in nestedValues) {
+                            if (!p.locationDetails[key] || !p.locationDetails[key].toLowerCase().includes(nestedValues[key])) {
+                                matchesNested = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                const matchesPrice = (p.price || 0) >= activeFilters.minPrice && (p.price || 0) <= activeFilters.maxPrice;
+                return matchesQuery && matchesLocation && matchesNested && matchesPrice && matchesCategory;
+            });
+
+            // Update Badge
+            let count = 0;
+            if (activeFilters.location) count++;
+            if (Object.keys(nestedValues).length > 0) count++;
+            if (activeFilters.minPrice > 0 || (activeFilters.maxPrice < Infinity && activeFilters.maxPrice > 0)) count++;
+
+            const badge = document.getElementById('activeFiltersBadge');
+            if (badge) {
+                if (count > 0) {
+                    badge.innerText = count;
+                    badge.classList.remove('hidden');
+                    badge.classList.add('flex');
+                } else {
+                    badge.classList.add('hidden');
+                    badge.classList.remove('flex');
+                }
+            }
+
+            renderResults();
+            closeFilterModal();
+        };
+
+        window.resetFilters = () => {
+            activeFilters = {
+                query: searchInput.value,
+                category: '',
+                location: '',
+                minPrice: 0,
+                maxPrice: Infinity
+            };
+
+            const minInput = document.getElementById('minPrice');
+            const maxInput = document.getElementById('maxPrice');
+            if (minInput) minInput.value = '';
+            if (maxInput) maxInput.value = '';
+
+            renderLocationFilters();
+            applyFilters();
+        };
+
+        function renderResults() {
+            if (resultsCountUI) {
+                resultsCountUI.innerText = `${filteredProducts.length} товаров`;
+            }
+
+            if (filteredProducts.length === 0) {
+                if (grid) grid.classList.add('hidden');
+                if (emptyState) {
+                    emptyState.classList.remove('hidden');
+                    emptyState.classList.add('flex');
+                }
+                return;
+            }
+
+            if (grid) grid.classList.remove('hidden');
+            if (emptyState) {
+                emptyState.classList.add('hidden');
+                emptyState.classList.remove('flex');
+            }
+
+            if (grid) {
+                grid.innerHTML = filteredProducts.map(p => {
+                    const isFav = favorites.includes(p.id);
+                    const photo = (p.images && p.images.length > 0) ? p.images[0] : (p.photos && p.photos.length > 0 ? p.photos[0] : 'https://via.placeholder.com/300');
+
+                    return `
+                        <div class="bg-white dark:bg-[#1a1a1a] rounded-3xl overflow-hidden shadow-sm border border-gray-100 dark:border-white/5 group cursor-pointer transition-all hover:shadow-xl hover:-translate-y-1 relative" onclick="window.location.href='product-detail.html?id=${p.id}'">
+                            <div class="relative aspect-square bg-gray-100 dark:bg-black/50 overflow-hidden">
+                                 <img src="${photo}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="">
+                                 <button onclick="toggleFavorite('${p.id}', event)" class="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-white dark:bg-[#2a2a2a] shadow-lg flex items-center justify-center z-10 hover:scale-110 active:scale-90 transition-all ${isFav ? 'text-red-500' : 'text-gray-400 dark:text-gray-500'}">
+                                    <i data-lucide="heart" class="w-5 h-5 ${isFav ? 'fill-red-500' : ''}"></i>
+                                 </button>
+                            </div>
+                            <div class="p-5">
+                                <h3 class="text-sm font-bold text-gray-900 dark:text-white line-clamp-1 mb-1">${p.title}</h3>
+                                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-2">${p.location || 'YakMarket'}</p>
+                                <p class="text-lg font-black text-black dark:text-white">${(p.price || 0).toLocaleString()} c.</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        window.toggleFavorite = (id, event) => {
+            if (event) event.stopPropagation();
+            if (favorites.includes(id)) {
+                favorites = favorites.filter(fid => fid !== id);
+            } else {
+                favorites.push(id);
+            }
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            renderResults();
+        };
+
+        // --- UI HELPERS ---
+        window.clearSearch = () => {
+            searchInput.value = '';
+            activeFilters.query = '';
+            if (clearBtn) clearBtn.classList.add('hidden');
+            applyFilters();
+            searchInput.focus();
+        };
+
+        function saveHistory(query) {
+            if (!query) return;
+            searchHistory = searchHistory.filter(item => item !== query);
+            searchHistory.unshift(query);
+            if (searchHistory.length > 5) searchHistory.pop();
+            localStorage.setItem('yak_search_history', JSON.stringify(searchHistory));
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            if (e.target.value.length > 0) {
+                if (clearBtn) clearBtn.classList.remove('hidden');
+            } else {
+                if (clearBtn) clearBtn.classList.add('hidden');
+            }
+        });
+
+        searchInput.addEventListener('focus', () => {
+            if (searchHistory.length > 0 && historyDropdown) {
+                const historyListUI = historyDropdown;
+                historyListUI.innerHTML = `
+                    <div class="p-4 border-b border-gray-100 dark:border-white/5 flex justify-between items-center text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
+                        <span>История</span>
+                        <button onclick="clearAllHistory()" class="hover:text-red-500 transition-colors uppercase">Очистить</button>
+                    </div>
+                    <div>
+                        ${searchHistory.map(term => `
+                            <div class="flex items-center justify-between px-6 py-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors cursor-pointer group" onclick="setSearch('${term}')">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="clock" class="w-4 h-4 text-gray-400"></i>
+                                    <span class="text-sm font-bold dark:text-gray-300 text-gray-700">${term}</span>
+                                </div>
+                                <i data-lucide="arrow-up-left" class="w-4 h-4 text-gray-300 dark:text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                historyDropdown.classList.remove('hidden');
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        });
+
+        window.clearAllHistory = () => {
+            searchHistory = [];
+            localStorage.setItem('yak_search_history', '[]');
+            if (historyDropdown) historyDropdown.classList.add('hidden');
+        };
+
+        window.setSearch = (val) => {
+            searchInput.value = val;
+            performSearch();
+        };
+
+        document.addEventListener('click', (e) => {
+            if (searchInput && historyDropdown && !searchInput.contains(e.target) && !historyDropdown.contains(e.target)) {
+                historyDropdown.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+
+</html>

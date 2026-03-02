@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Условия использования YakMarket.tj - торговая площадка Таджикистана">
+    <meta name="keywords" content="YakMarket, условия использования, правила, Таджикистан">
+    <title>YakMarket - Условия использования</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+    <script>
+            (function () {
+                const savedTheme = localStorage.getItem('theme');
+                const isDark = savedTheme === 'dark' || (!savedTheme && true);
+                if (isDark) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            })();
+    </script>
+    <style> </style>
+    body {
+    font-family: 'Inter', sans-serif;
+    }
+    </style>
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease-out;
+    }
+
+    .section-content.visible {
+    opacity: 1;
+    transform: translateY(0);
+    }
+    </style>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+</head>
+
+<body
+    class="bg-gray-50 dark:bg-[#121212] text-[#171a20] dark:text-white min-h-screen p-4 md:p-8 transition-colors duration-300">
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-5 right-5 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- Empty State - Hidden by default -->
+    <div id="empty-state"
+        class="empty-state hidden flex flex-col items-center justify-center py-20 px-4 text-center min-h-[60vh]">
+        <div class="empty-icon mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                class="text-gray-400 dark:text-gray-600">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+            </svg>
+        </div>
+        <h2 class="empty-title text-2xl font-bold text-gray-900 dark:text-white mb-3">Условия использования</h2>
+        <p class="empty-subtitle text-gray-500 dark:text-gray-400 mb-6">Ознакомьтесь с правилами использования платформы
+        </p>
+        <button
+            onclick="document.getElementById('content-area').scrollIntoView({behavior: 'smooth'}); document.getElementById('empty-state').classList.add('hidden'); document.getElementById('empty-state').classList.remove('flex');"
+            class="empty-btn">
+            <i data-lucide="arrow-down" class="lucide"></i>
+            Читать далее
+        </button>
+    </div>
+
+    <div
+        class="max-w-4xl mx-auto bg-white dark:bg-[#1a1a1a] p-6 md:p-10 rounded-3xl shadow-sm border border-gray-100 dark:border-[#333] transition-colors duration-300">
+
+        <!-- Header -->
+        <div class="flex items-center gap-4 mb-8">
+            <button onclick="goBack()"
+                class="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
+                <i data-lucide="arrow-left" class="text-gray-800 dark:text-white"></i>
+            </button>
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Условия использования</h1>
+            <button onclick="toggleTheme()"
+                class="ml-auto p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300">
+                <i data-lucide="sun" class="block dark:hidden lucide"></i>
+                <i data-lucide="moon" class="hidden dark:block lucide"></i>
+            </button>
+        </div>
+
+        <!-- Last Updated -->
+        <div class="mb-8 p-4 bg-gray-50 dark:bg-[#2a2a2a] rounded-2xl">
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+                <i data-lucide="calendar" class="inline mr-2 lucide-sm"></i>
+                Последнее обновление: 7 февраля 2026 года
+            </p>
+        </div>
+
+        <div id="content-area" class="space-y-10">
+
+            <!-- Section 1 -->
+            <div class="section-content space-y-4">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
+                        <i data-lucide="info" class="text-blue-600 dark:text-blue-400 lucide"></i>
+                    </div>
+                    <h2 class="text-xl font-black uppercase tracking-wide text-gray-900 dark:text-white">Введение</h2>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
+                    Добро пожаловать в YakMarket.tj! Используя наше приложение и веб-сайт, вы соглашаетесь с настоящими
+                    Условиями использования. Пожалуйста, внимательно прочитайте эти условия перед началом использования
+                    нашей платформы.
+                </p>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
+                    YakMarket.tj — это онлайн-платформа для размещения и поиска объявлений о товарах и услугах в
+                    Таджикистане.
+                    Мы стремимся создать безопасное и удобное пространство для совершения сделок между покупателями и
+                    продавцами.
+                </p>
+            </div>
+
+            <div class="w-full h-px bg-gray-100 dark:bg-[#333]"></div>
+
+            <!-- Section 2 -->
+            <div class="section-content space-y-4">
+                <div class="flex items-center gap-3 mb-4">
+                    <div
+                        class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center">
+                        <i data-lucide="check-circle" class="text-green-600 dark:text-green-400 lucide"></i>
+                    </div>
+                    <h2 class="text-xl font-black uppercase tracking-wide text-gray-900 dark:text-white">Принятие
+                        условий</h2>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
+                    Создавая учетную запись в YakMarket.tj или используя наши услуги, вы:
+                </p>
+                <ul class="space-y-3 text-gray-600 dark:text-gray-400 leading-relaxed list-disc pl-5">
+                    <li class="text-lg">Подтверждаете, что вам исполнилось 18 лет или вы используете платформу с
+                        разрешения родителей или опекунов</li>
+                    <li class="text-lg">Соглашаетесь соблюдать настоящие Условия использования</li>
+                    <li class="text-lg">Обязуетесь использовать платформу только в законных целях</li>
+                    <li class="text-lg">Принимаете нашу Политику конфиденциальности</li>
+                </ul>
+            </div>
+
+            <div class="w-full h-px bg-gray-100 dark:bg-[#333]"></div>
+
+            <!-- Section 3 -->
+            <div class="section-content space-y-4">
+                <div class="flex items-center gap-3 mb-4">
+                    <div
+                        class="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
+                        <i data-lucide="shopping-bag" class="text-purple-600 dark:text-purple-400 lucide"></i>
+                    </div>
+                    <h2 class="text-xl font-black uppercase tracking-wide text-gray-900 dark:text-white">Правила для
+                        продавцов</h2>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
+                    Если вы размещаете объявления на YakMarket.tj, вы обязуетесь:
+                </p>
+                <ul class="space-y-3 text-gray-600 dark:text-gray-400 leading-relaxed list-disc pl-5">
+                    <li class="text-lg">Предоставлять точную и полную информацию о товарах</li>
+                    <li class="text-lg">Использовать реальные фотографии товаров</li>
+                    <li class="text-lg">Указывать честную цену без скрытых платежей</li>
+                    <li class="text-lg">Быть готовым к выполнению обязательств перед покупателями</li>
+                    <li class="text-lg">Отвечать на сообщения покупателей в разумные сроки</li>
+                    <li class="text-lg">Обновлять или удалять объявления о проданных товарах</li>
+                </ul>
+            </div>
+
+            <div class="w-full h-px bg-gray-100 dark:bg-[#333]"></div>
+
+            <!-- Section 4 -->
+            <div class="section-content space-y-4">
+                <div class="flex items-center gap-3 mb-4">
+                    <div
+                        class="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-xl flex items-center justify-center">
+                        <i data-lucide="search" class="text-yellow-600 dark:text-yellow-400 lucide"></i>
+                    </div>
+                    <h2 class="text-xl font-black uppercase tracking-wide text-gray-900 dark:text-white">Правила для
+                        покупателей</h2>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
+                    При использовании YakMarket.tj для поиска и покупки товаров:
+                </p>
+                <ul class="space-y-3 text-gray-600 dark:text-gray-400 leading-relaxed list-disc pl-5">
+                    <li class="text-lg">Внимательно изучайте описание товара и фотографии</li>
+                    <li class="text-lg">Связывайтесь с продавцом для уточнения деталей перед покупкой</li>
+                    <li class="text-lg">Проверяйте товар при получении перед оплатой</li>
+                    <li class="text-lg">Оставляйте честные отзывы о продавцах</li>
+                    <li class="text-lg">Сообщайте о подозрительных объявлениях</li>
+                </ul>
+            </div>
+
+            <div class="w-full h-px bg-gray-100 dark:bg-[#333]"></div>
+
+            <!-- Section 5 -->
+            <div class="section-content space-y-4">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-xl flex items-center justify-center">
+                        <i data-lucide="ban" class="text-red-600 dark:text-red-400 lucide"></i>
+                    </div>
+                    <h2 class="text-xl font-black uppercase tracking-wide text-gray-900 dark:text-white">Запрещенные
+                        действия</h2>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
+                    На YakMarket.tj строго запрещены следующие действия:
+                </p>
+                <ul class="space-y-3 text-gray-600 dark:text-gray-400 leading-relaxed list-disc pl-5">
+                    <li class="text-lg">Размещение запрещенных товаров (наркотики, оружие, поддельные документы и т.д.)
+                    </li>
+                    <li class="text-lg">Спам, массовая рассылка рекламных сообщений</li>
+                    <li class="text-lg">Мошенничество, обман покупателей или продавцов</li>
+                    <li class="text-lg">Использование чужих фотографий и описаний</li>
+                    <li class="text-lg">Создание фейковых аккаунтов</li>
+                    <li class="text-lg">Нарушение законов Республики Таджикистан</li>
+                    <li class="text-lg">Оскорбление, угрозы, дискриминация других пользователей</li>
+                </ul>
+            </div>
+
+            <div class="w-full h-px bg-gray-100 dark:bg-[#333]"></div>
+
+            <!-- Section 6 -->
+            <div class="section-content space-y-4">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 bg-teal-100 dark:bg-teal-900/30 rounded-xl flex items-center justify-center">
+                        <i data-lucide="dollar-sign" class="text-teal-600 dark:text-teal-400 lucide"></i>
+                    </div>
+                    <h2 class="text-xl font-black uppercase tracking-wide text-gray-900 dark:text-white">Финансовые
+                        условия</h2>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
+                    Размещение объявлений на YakMarket.tj бесплатно. Мы не взимаем комиссию за размещение товаров.
+                </p>
+                <ul class="space-y-3 text-gray-600 dark:text-gray-400 leading-relaxed list-disc pl-5">
+                    <li class="text-lg">Базовая публикация объявлений — бесплатно</li>
+                    <li class="text-lg">Возможность продвижения объявлений — бесплатно на текущий момент</li>
+                    <li class="text-lg">Мы оставляем за собой право ввести платные услуги в будущем с уведомлением
+                        пользователей</li>
+                </ul>
+            </div>
+
+            <div class="w-full h-px bg-gray-100 dark:bg-[#333]"></div>
+
+            <!-- Section 7 -->
+            <div class="section-content space-y-4">
+                <div class="flex items-center gap-3 mb-4">
+                    <div
+                        class="w-10 h-10 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center">
+                        <i data-lucide="alert-triangle" class="text-orange-600 dark:text-orange-400 lucide"></i>
+                    </div>
+                    <h2 class="text-xl font-black uppercase tracking-wide text-gray-900 dark:text-white">Ответственность
+                    </h2>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
+                    YakMarket.tj предоставляет информационную платформу. Мы не несем ответственности за:
+                </p>
+                <ul class="space-y-3 text-gray-600 dark:text-gray-400 leading-relaxed list-disc pl-5">
+                    <li class="text-lg">Качество, безопасность или законность товаров, размещенных пользователями</li>
+                    <li class="text-lg">Сделки, совершенные вне нашей платформы</li>
+                    <li class="text-lg">Действия или бездействие продавцов или покупателей</li>
+                    <li class="text-lg">Убытки, возникшие в результате использования платформы</li>
+                </ul>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-lg mt-4">
+                    Мы прилагаем все усилия для проверки объявлений, однако финальные детали о товарах
+                    необходимо уточнять непосредственно у продавцов.
+                </p>
+            </div>
+
+            <div class="w-full h-px bg-gray-100 dark:bg-[#333]"></div>
+
+            <!-- Section 8 - TJ -->
+            <div class="section-content space-y-4">
+                <div class="flex items-center gap-3 mb-4">
+                    <div
+                        class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center">
+                        <i data-lucide="globe" class="text-indigo-600 dark:text-indigo-400 lucide"></i>
+                    </div>
+                    <h2 class="text-xl font-black uppercase tracking-wide text-gray-900 dark:text-white">Қоидаҳои
+                        истифодаи YakMarket</h2>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
+                    Ҳангоми истифодаи барнома, шумо ба ин қоидаҳои оддӣ розӣ мешавед:
+                </p>
+                <ul class="space-y-3 text-gray-600 dark:text-gray-400 leading-relaxed list-disc pl-5">
+                    <li class="text-lg">
+                        <strong class="text-gray-900 dark:text-white">Мӯҳтаво:</strong>
+                        YakMarket ин майдони иттилоотӣ аст. Мо кӯшиш мекунем маълумотро тафтиш кунем, аммо тафсилоти
+                        ниҳоии молҳоро аз фурӯшандагон аниқ кунед.
+                    </li>
+                    <li class="text-lg">
+                        <strong class="text-gray-900 dark:text-white">Маҳдудиятҳо:</strong>
+                        Сервисро барои спам ё паҳн кардани мӯҳтавои мамнӯъ (мувофиқи қонунҳои Ҷумҳурии Тоҷикистон)
+                        истифода набаред.
+                    </li>
+                    <li class="text-lg">
+                        <strong class="text-gray-900 dark:text-white">Масъулият:</strong>
+                        Мо дастрасиро ба маълумот «чуноне ки ҳаст» пешниҳод мекунем. Мо барои муомилаҳое, ки шумо берун
+                        аз барнома анҷом медиҳед, масъул нестем.
+                    </li>
+                    <li class="text-lg">
+                        <strong class="text-gray-900 dark:text-white">Тағирот:</strong>
+                        Мо метавонем функсияҳо ва қоидаҳоро барои беҳтар кардани сервис нав кунем.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="w-full h-px bg-gray-100 dark:bg-[#333]"></div>
+
+            <!-- Section 9 -->
+            <div class="section-content space-y-4">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 bg-pink-100 dark:bg-pink-900/30 rounded-xl flex items-center justify-center">
+                        <i data-lucide="archive" class="text-pink-600 dark:text-pink-400 lucide"></i>
+                    </div>
+                    <h2 class="text-xl font-black uppercase tracking-wide text-gray-900 dark:text-white">Приостановка и
+                        прекращение</h2>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
+                    Мы оставляем за собой право приостановить или прекратить ваш доступ к YakMarket.tj в следующих
+                    случаях:
+                </p>
+                <ul class="space-y-3 text-gray-600 dark:text-gray-400 leading-relaxed list-disc pl-5">
+                    <li class="text-lg">Нарушение настоящих Условий использования</li>
+                    <li class="text-lg">Подозрительная активность или мошенничество</li>
+                    <li class="text-lg">Жалобы от других пользователей</li>
+                    <li class="text-lg">Неактивность учетной записи в течение длительного времени</li>
+                    <li class="text-lg">По вашему собственному запросу (удаление аккаунта)</li>
+                </ul>
+            </div>
+
+            <div class="w-full h-px bg-gray-100 dark:bg-[#333]"></div>
+
+            <!-- Section 10 -->
+            <div class="section-content space-y-4">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 bg-cyan-100 dark:bg-cyan-900/30 rounded-xl flex items-center justify-center">
+                        <i data-lucide="refresh-cw" class="text-cyan-600 dark:text-cyan-400 lucide"></i>
+                    </div>
+                    <h2 class="text-xl font-black uppercase tracking-wide text-gray-900 dark:text-white">Изменения в
+                        условиях</h2>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
+                    Мы можем периодически обновлять настоящие Условия использования. Существенные изменения
+                    будут уведомлены через приложение или по электронной почте.
+                </p>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
+                    Продолжая использовать YakMarket.tj после внесения изменений, вы соглашаетесь с новыми условиями.
+                </p>
+            </div>
+
+            <div class="w-full h-px bg-gray-100 dark:bg-[#333]"></div>
+
+            <!-- Contact Info -->
+            <div class="section-content bg-gray-50 dark:bg-[#2a2a2a] rounded-2xl p-6 space-y-4">
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <i data-lucide="mail" class="lucide"></i>
+                    Связаться с нами
+                </h2>
+                <p class="text-gray-600 dark:text-gray-400 text-lg">
+                    Если у вас есть вопросы об условиях использования, пожалуйста, свяжитесь с нами:
+                </p>
+                <div class="space-y-2 text-gray-600 dark:text-gray-400">
+                    <p class="flex items-center gap-2">
+                        <i data-lucide="mail" class="lucide-sm"></i>
+                        <span>support@yakmarket.tj</span>
+                    </p>
+                    <p class="flex items-center gap-2">
+                        <i data-lucide="phone" class="lucide-sm"></i>
+                        <span>+992 000 00 00 00</span>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-10 pt-6 border-t border-gray-100 dark:border-[#333] text-center">
+            <p class="text-sm text-gray-400 dark:text-gray-500">© 2026 YakMarket.TJ - Все права защищены</p>
+            <div class="mt-4 flex justify-center gap-4">
+                <a href="privacy.html"
+                    class="text-sm text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Политика
+                    конфиденциальности</a>
+                <span class="text-gray-300 dark:text-gray-700">|</span>
+                <a href="dashboard.html"
+                    class="text-sm text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Главная</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize icons
+        lucide.createIcons();
+
+        function goBack() {
+            if (document.referrer && (document.referrer.includes('register.html') || document.referrer.includes('login.html'))) {
+                window.history.back();
+            } else {
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        window.toggleTheme = function () {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Show content with animation on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('.section-content');
+            sections.forEach((section, index) => {
+                setTimeout(() => {
+                    section.classList.add('visible');
+                }, index * 100);
+            });
+
+            // Hide empty state and show content
+            const emptyState = document.getElementById('empty-state');
+            const contentArea = document.getElementById('content-area');
+            emptyState.classList.add('hidden');
+            emptyState.classList.remove('flex');
+            contentArea.classList.remove('hidden');
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,695 @@
+/* YakMarket Theme - Только 2 цвета: #212121 и #ffffff */
+
+/* YakMarket Theme Styles - Responsive from Nokia (320px) to TV (1920px+) */
+
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --bg-tertiary: #f3f4f6;
+    --text-primary: #171a20;
+    --text-secondary: #6b7280;
+    --text-tertiary: #9ca3af;
+    --border-primary: #e5e7eb;
+    --border-secondary: #d1d5db;
+    --accent-primary: #000000;
+    --accent-secondary: #3b82f6;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
+
+    /* Base Design Tokens */
+    --radius-standard: 16px;
+    --radius-sm: 12px;
+    --radius-lg: 24px;
+
+    /* Toast positioning variables */
+    --toast-top: 1.25rem;
+    --toast-right: 1.25rem;
+    --toast-max-width: 280px;
+}
+
+/* Large screens (TV, large monitors) */
+@media (min-width: 1600px) {
+    :root {
+        --toast-right: calc((100vw - 1600px) / 2 + 1.25rem);
+    }
+}
+
+/* Extra small screens (Nokia, old phones) */
+@media (max-width: 320px) {
+    :root {
+        --toast-top: 0.5rem;
+        --toast-right: 0.5rem;
+        --toast-max-width: 180px;
+    }
+}
+
+.dark {
+    --bg-primary: #212121;
+    --bg-secondary: #2a2a2a;
+    --bg-tertiary: #333333;
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --text-tertiary: #9ca3af;
+    --border-primary: #333333;
+    --border-secondary: #4b5563;
+    --accent-primary: #ffffff;
+    --accent-secondary: #60a5fa;
+}
+
+/* Global Radius Override */
+.rounded-2xl,
+[class*="rounded-2xl"],
+.product-card,
+.modal-content,
+#toast-container>div {
+    border-radius: var(--radius-standard) !important;
+}
+
+.rounded-xl,
+[class*="rounded-xl"],
+button:not(.rounded-full),
+input:not(.rounded-full) {
+    border-radius: var(--radius-sm) !important;
+}
+
+/* Base colors */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Typography Helpers */
+.tracking-tesla {
+    letter-spacing: 0.25em;
+}
+
+/* Lucide Icons Global Sizing */
+.lucide {
+    width: 24px !important;
+    height: 24px !important;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    display: inline-block !important;
+}
+
+.lucide-sm {
+    width: 16px !important;
+    height: 16px !important;
+}
+
+.lucide-lg {
+    width: 32px !important;
+    height: 32px !important;
+}
+
+/* Make sure icons are visible */
+.lucide,
+.lucide-sm,
+.lucide-lg {
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Lottie player icons - ensure they are visible */
+lottie-player {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Navigation icons container */
+.nav-item lottie-player,
+.nav-item .lucide {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Specific Header Icon Sizing */
+.nav-item .lucide {
+    width: 20px !important;
+    height: 20px !important;
+}
+
+/* Navigation Container - Flexbox для выравнивания иконок */
+.nav-item {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    position: relative;
+    text-decoration: none;
+}
+
+/* Убираем старые отступы от Tailwind */
+.nav-item.p-2 {
+    padding: 0 !important;
+}
+
+/* Скрытие навигационной панели для форм */
+.hide-nav header.fixed {
+    display: none !important;
+}
+
+body.pt-16,
+.hide-nav~main,
+.hide-nav~.content {
+    padding-top: 0 !important;
+}
+
+/* Hover эффект */
+.nav-item:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: translateY(-1px);
+}
+
+.dark .nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Индикатор активного раздела - черточка */
+.nav-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 2px;
+    background-color: #212121;
+    border-radius: 2px;
+}
+
+.dark .nav-item.active::after {
+    background-color: #ffffff;
+}
+
+/* Активный пункт меню */
+.nav-item.active {
+    color: #212121;
+}
+
+.dark .nav-item.active {
+    color: #ffffff;
+}
+
+/* Global Empty State Styles */
+.empty-state-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 2rem;
+    min-height: 400px;
+}
+
+.empty-state-icon {
+    width: 100px;
+    height: 100px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    color: var(--text-tertiary);
+    transition: all 0.3s ease;
+}
+
+.empty-state-container:hover .empty-state-icon {
+    transform: scale(1.05) rotate(5deg);
+    color: var(--accent-primary);
+}
+
+.empty-state-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.empty-state-subtitle {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    max-width: 280px;
+    margin-bottom: 1.5rem;
+}
+
+.empty-state-action {
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-standard);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.7rem;
+    transition: all 0.2s ease;
+}
+
+.empty-state-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Typography - Scales from small phones to large TVs */
+html {
+    font-size: 16px;
+}
+
+/* Small phones (Nokia and similar) */
+@media (max-width: 375px) {
+    html {
+        font-size: 14px;
+    }
+}
+
+/* Large phones */
+@media (min-width: 376px) and (max-width: 424px) {
+    html {
+        font-size: 15px;
+    }
+}
+
+/* Tablets */
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+/* Large tablets and small laptops */
+@media (min-width: 1024px) {
+    html {
+        font-size: 17px;
+    }
+}
+
+/* Desktop and TV */
+@media (min-width: 1440px) {
+    html {
+        font-size: 18px;
+    }
+}
+
+/* Extra large screens (Large TV) */
+@media (min-width: 1920px) {
+    html {
+        font-size: 20px;
+    }
+}
+
+/* Ultra small screens (old Nokia phones) */
+@media (max-width: 320px) {
+    html {
+        font-size: 12px;
+    }
+
+    /* Adjust padding for very small screens */
+    .p-4 {
+        padding: 0.75rem;
+    }
+
+    .p-6 {
+        padding: 1rem;
+    }
+
+    .p-8 {
+        padding: 1.25rem;
+    }
+
+    /* Smaller border radius for small screens */
+    .rounded-2xl {
+        border-radius: 0.75rem;
+    }
+
+    .rounded-3xl {
+        border-radius: 1rem;
+    }
+
+    /* Stack elements vertically on ultra small screens */
+    .flex-row {
+        flex-direction: column;
+    }
+
+    .gap-4 {
+        gap: 0.5rem;
+    }
+
+    .gap-6 {
+        gap: 0.75rem;
+    }
+}
+
+/* Empty State Styles */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+    min-height: 400px;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.empty-state.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.empty-icon {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 1.5rem;
+    opacity: 0.6;
+    transition: transform 0.3s ease;
+}
+
+.empty-icon:hover {
+    transform: scale(1.05);
+}
+
+.empty-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+}
+
+.empty-subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.5;
+    max-width: 400px;
+}
+
+.empty-btn {
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-standard);
+    font-weight: 600;
+    font-size: 0.8125rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.empty-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.empty-btn:active {
+    transform: translateY(0);
+}
+
+/* Responsive Empty State */
+@media (max-width: 640px) {
+    .empty-state {
+        padding: 3rem 1rem;
+        min-height: 300px;
+    }
+
+    .empty-icon {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 1rem;
+    }
+
+    .empty-title {
+        font-size: 1.25rem;
+    }
+
+    .empty-subtitle {
+        font-size: 0.875rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .empty-btn {
+        padding: 0.625rem 1.5rem;
+        font-size: 0.8125rem;
+    }
+}
+
+/* Glassmorphism Effect */
+.glassmorphism {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .glassmorphism {
+    background: rgba(33, 33, 33, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Smooth Transitions */
+* {
+    transition-property: background-color, border-color, color;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-primary);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--border-secondary);
+}
+
+/* Focus Styles */
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--accent-primary);
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Card Hover Effects */
+.card-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Button Styles */
+.btn-primary {
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-primary);
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background: var(--bg-tertiary);
+    transform: translateY(-1px);
+}
+
+/* Переключатель темы */
+.theme-toggle {
+    background-color: transparent;
+    color: var(--text-primary);
+}
+
+.theme-toggle:hover {
+    background-color: var(--bg-accent);
+    color: var(--text-accent);
+}
+
+/* Уведомление */
+.toast {
+    background-color: var(--bg-accent);
+    color: var(--text-accent);
+    border: none;
+}
+
+/* Иконки темы */
+[data-theme="light"] .theme-icon-sun {
+    display: block;
+}
+
+[data-theme="light"] .theme-icon-moon {
+    display: none;
+}
+
+[data-theme="dark"] .theme-icon-sun {
+    display: none;
+}
+
+[data-theme="dark"] .theme-icon-moon {
+    display: block;
+}
+
+/* Toast Container - Responsive with barrier to prevent going to bottom */
+#toast-container {
+    position: fixed;
+    top: var(--toast-top);
+    right: var(--toast-right);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    pointer-events: none;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* Toast animation keyframes */
+@keyframes toastSlideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes toastSlideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.toast-notification {
+    animation: toastSlideIn 0.3s ease-out forwards;
+}
+
+.toast-notification.dismissing {
+    animation: toastSlideOut 0.3s ease-in forwards;
+}
+
+/* Toast Progress Bar Animation - Right to Left */
+.toast-progress {
+    transition: width linear;
+    right: 0;
+    left: auto;
+}
+
+/* Responsive toast sizing for small phones */
+@media (max-width: 320px) {
+    #toast-container {
+        top: 0.5rem;
+        right: 0.5rem;
+        left: 0.5rem;
+        width: auto;
+    }
+
+    .toast-notification {
+        min-width: 180px !important;
+        max-width: calc(100vw - 1rem) !important;
+    }
+}
+
+@media (min-width: 321px) and (max-width: 480px) {
+    #toast-container {
+        top: 0.75rem;
+        right: 0.75rem;
+        left: 0.75rem;
+    }
+
+    .toast-notification {
+        min-width: 200px !important;
+        max-width: calc(100vw - 1.5rem) !important;
+    }
+}
+
+/* Large screens - keep toast on right side */
+@media (min-width: 1600px) {
+    #toast-container {
+        right: calc((100vw - 1600px) / 2 + 1.25rem);
+    }
+}

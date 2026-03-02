@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>YakMarket - Избранное</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23000'/%3E%3Ccircle cx='32' cy='32' r='23' stroke='%23fff' stroke-width='4' fill='none'/%3E%3Ctext x='32' y='41' text-anchor='middle' fill='%23fff' font-family='Arial, sans-serif' font-size='36' font-weight='bold'%3Ey%3C/text%3E%3C/svg%3E">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="clock.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="js/app-constants.js"></script>
+    <script src="js/strapi-client.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api/products-api.js"></script>
+    <script src="js/toast-notifications.js"></script>
+    <script src="js/favorites.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="theme.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+    <script>
+            (function () {
+                const savedTheme = localStorage.getItem('theme');
+                const isDark = savedTheme === 'dark' || (!savedTheme && true);
+                if (isDark) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            })();
+    </script>
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        .favorite-card {
+            opacity: 0;
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        .favorite-card:nth-child(1) {
+            animation-delay: 0.05s;
+        }
+
+        .favorite-card:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .favorite-card:nth-child(3) {
+            animation-delay: 0.15s;
+        }
+
+        .favorite-card:nth-child(4) {
+            animation-delay: 0.2s;
+        }
+
+        .favorite-card:nth-child(5) {
+            animation-delay: 0.25s;
+        }
+
+        .favorite-card:nth-child(6) {
+            animation-delay: 0.3s;
+        }
+    </style>
+</head>
+
+<body class="bg-white dark:bg-[#212121] text-gray-900 dark:text-white min-h-screen">
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-5 right-5 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- Header - Unified Navigation -->
+    <header
+        class="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-[#212121] border-b border-gray-200 dark:border-white/5 shadow-sm h-16">
+        <div class="max-w-[1600px] mx-auto px-4 md:px-6 h-full flex items-center justify-between">
+            <div class="flex-shrink-0 flex items-center">
+                <a href="dashboard.html" class="flex items-center gap-3">
+                    <svg class="w-8 h-8 md:w-9 md:h-9 flex-shrink-0" viewBox="0 0 64 64" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <rect width="64" height="64" rx="16" class="fill-black dark:fill-white" />
+                        <circle cx="32" cy="32" r="23" stroke-width="4" class="stroke-white dark:stroke-black" />
+                        <text x="32" y="41" font-family="Arial, sans-serif" font-weight="bold" font-size="36"
+                            text-anchor="middle" class="fill-white dark:fill-black">y</text>
+                    </svg>
+                    <span
+                        class="text-lg md:text-xl font-black tracking-tesla uppercase text-black dark:text-white whitespace-nowrap">YAKMARKET.TJ</span>
+                </a>
+            </div>
+            <div class="flex items-center gap-1">
+                <button onclick="toggleTheme()"
+                    class="nav-item p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+                    <i data-lucide="sun" class="block dark:hidden lucide"></i>
+                    <i data-lucide="moon" class="hidden dark:block lucide"></i>
+                </button>
+                <a href="dashboard.html"
+                    class="nav-item p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+                    <i data-lucide="home" class="lucide"></i>
+                </a>
+                <a href="favorites.html"
+                    class="nav-item p-2 rounded-full bg-gray-100 dark:bg-white/10 text-black dark:text-white transition-colors relative">
+                    <i data-lucide="heart" class="lucide"></i>
+                    <span id="fav-count-badge"
+                        class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full hidden"></span>
+                </a>
+                <a href="categories.html"
+                    class="nav-item p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+                    <i data-lucide="layout-grid" class="lucide"></i>
+                </a>
+                <a href="chat.html"
+                    class="nav-item p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+                    <i data-lucide="message-circle" class="lucide"></i>
+                </a>
+                <a href="settings.html"
+                    class="nav-item p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+                    <i data-lucide="user" class="lucide"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-[1600px] mx-auto px-4 md:px-6 pt-24 pb-12 min-h-[80vh]">
+        <!-- Page Header -->
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-3xl font-black text-gray-900 dark:text-white uppercase tracking-tight">Избранное</h1>
+                <p class="text-gray-500 dark:text-gray-400 mt-1">Ваши сохраненные товары</p>
+            </div>
+            <div class="bg-gray-100 dark:bg-white/5 px-5 py-3 rounded-2xl">
+                <span id="favorites-count" class="font-black text-black dark:text-white text-xl">0</span>
+                <span class="text-xs uppercase font-bold tracking-wider opacity-40 ml-1">товаров</span>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading-state" class="flex flex-col items-center justify-center py-20">
+            <div
+                class="w-12 h-12 border-4 border-gray-200 dark:border-gray-700 border-t-black dark:border-t-white rounded-full animate-spin mb-4">
+            </div>
+            <p class="text-gray-500 dark:text-gray-400 text-sm">Загрузка избранного...</p>
+        </div>
+
+        <!-- Favorites Grid -->
+        <div id="favorites-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 hidden">
+            <!-- Injected via JS -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden flex-col items-center justify-center py-20 text-center animate-fade-in">
+            <div class="w-24 h-24 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center mb-6">
+                <i data-lucide="heart" class="w-10 h-10 opacity-30"></i>
+            </div>
+            <h2 class="text-2xl font-black mb-2 uppercase tracking-tight">В избранном пока пусто</h2>
+            <p class="text-gray-500 dark:text-gray-400 mb-8 max-w-xs">Вы еще не добавили ни одного товара в свой список
+                избранного.</p>
+            <a href="dashboard.html"
+                class="bg-black dark:bg-white text-white dark:text-black px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl hover:opacity-90 transition-opacity">Начать
+                покупки</a>
+        </div>
+
+        <!-- Not Logged In State -->
+        <div id="not-logged-in" class="hidden flex-col items-center justify-center py-20 text-center animate-fade-in">
+            <div class="w-24 h-24 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center mb-6">
+                <i data-lucide="user" class="w-10 h-10 opacity-30"></i>
+            </div>
+            <h2 class="text-2xl font-black mb-2 uppercase tracking-tight">Войдите в аккаунт</h2>
+            <p class="text-gray-500 dark:text-gray-400 mb-8 max-w-xs">Чтобы просмотреть избранное, необходимо войти в
+                систему.</p>
+            <a href="login.html"
+                class="bg-black dark:bg-white text-white dark:text-black px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl hover:opacity-90 transition-opacity">Войти</a>
+        </div>
+    </main>
+
+    <script>
+        // Theme toggle
+        window.toggleTheme = function () {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            const checkReady = setInterval(() => {
+                if (window.YakAuth && window.YakFavorites && window.ProductsAPI) {
+                    clearInterval(checkReady);
+                    loadFavorites();
+                }
+            }, 100);
+
+            document.addEventListener('favoritesUpdated', () => loadFavorites());
+        });
+
+        async function loadFavorites() {
+            const grid = document.getElementById('favorites-grid');
+            const emptyState = document.getElementById('empty-state');
+            const notLoggedIn = document.getElementById('not-logged-in');
+            const loadingState = document.getElementById('loading-state');
+            const totalCount = document.getElementById('favorites-count');
+            const favBadge = document.getElementById('fav-count-badge');
+
+            // Check auth
+            if (!window.YakAuth.isAuthenticated()) {
+                loadingState.classList.add('hidden');
+                notLoggedIn.classList.remove('hidden');
+                notLoggedIn.classList.add('flex');
+                return;
+            }
+
+            const favIds = window.YakFavorites.get();
+
+            // Update counts
+            if (totalCount) totalCount.textContent = favIds.length;
+            if (favBadge) favBadge.classList.toggle('hidden', favIds.length === 0);
+
+            if (favIds.length === 0) {
+                loadingState.classList.add('hidden');
+                grid?.classList.add('hidden');
+                emptyState?.classList.remove('hidden');
+                emptyState?.classList.add('flex');
+                return;
+            }
+
+            try {
+                grid?.classList.remove('hidden');
+                emptyState?.classList.add('hidden');
+                emptyState?.classList.remove('flex');
+
+                const products = [];
+                for (const id of favIds) {
+                    try {
+                        const p = await window.ProductsAPI.getProductById(id);
+                        if (p) products.push(p);
+                    } catch (e) {
+                        console.warn(`Failed to fetch product ${id}`);
+                    }
+                }
+
+                loadingState.classList.add('hidden');
+
+                if (products.length === 0) {
+                    grid?.classList.add('hidden');
+                    emptyState?.classList.remove('hidden');
+                    emptyState?.classList.add('flex');
+                    return;
+                }
+
+                grid.innerHTML = products.map((p, index) => {
+                    const attrs = p.attributes || p;
+                    const photo = attrs.images?.data?.[0]?.attributes?.url ||
+                        attrs.images?.[0]?.url ||
+                        'https://via.placeholder.com/400?text=No+Image';
+
+                    return `
+                    <div class="favorite-card group bg-white dark:bg-[#1a1a1a] rounded-2xl overflow-hidden border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-xl transition-all duration-300" style="animation-delay: ${index * 0.05}s">
+                        <a href="product-detail.html?id=${p.id}" class="block relative aspect-square overflow-hidden bg-gray-100 dark:bg-[#111]">
+                            <img src="${photo}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="${attrs.title}">
+                            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors"></div>
+                        </a>
+                        <div class="p-4">
+                            <h3 class="font-bold text-gray-900 dark:text-white line-clamp-1 mb-1">${attrs.title || 'Без названия'}</h3>
+                            <div class="flex items-center justify-between mt-2">
+                                <span class="text-lg font-black text-black dark:text-white">${attrs.price ? parseFloat(attrs.price).toLocaleString() : 0} c.</span>
+                                <button onclick="removeFavorite('${p.id}')" 
+                                    class="w-10 h-10 rounded-xl bg-red-50 dark:bg-red-500/10 flex items-center justify-center text-red-500 shadow-sm hover:scale-110 active:scale-95 transition-all"
+                                    title="Удалить из избранного">
+                                    <i data-lucide="heart" fill="currentColor" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('');
+
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            } catch (error) {
+                console.error('Error loading favorites:', error);
+                loadingState.classList.add('hidden');
+                if (window.YakToast) {
+                    window.YakToast.error('Ошибка загрузки избранного');
+                }
+            }
+        }
+
+        async function removeFavorite(productId) {
+            try {
+                await window.YakFavorites.toggle(productId);
+                // Reload the list
+                loadFavorites();
+            } catch (error) {
+                console.error('Error removing favorite:', error);
+            }
+        }
+    </script>
+</body>
+
+</html>

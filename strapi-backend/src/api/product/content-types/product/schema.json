@@ -1,0 +1,151 @@
+{
+  "kind": "collectionType",
+  "collectionName": "products",
+  "info": {
+    "singularName": "product",
+    "pluralName": "products",
+    "displayName": "Товар",
+    "description": "Товары маркетплейса YakMarket"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100,
+      "minLength": 3
+    },
+    "description": {
+      "type": "text",
+      "required": true,
+      "maxLength": 2000,
+      "minLength": 10
+    },
+    "price": {
+      "type": "decimal",
+      "required": true,
+      "min": 0,
+      "max": 9999999
+    },
+    "currency": {
+      "type": "string",
+      "default": "TJS"
+    },
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::category.category"
+    },
+    "subcategory": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::category.category"
+    },
+    "location": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "images": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "phone": {
+      "type": "string",
+      "regex": "^\\+?[0-9]{10,15}$"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "published",
+        "rejected",
+        "sold",
+        "hidden"
+      ],
+      "default": "pending"
+    },
+    "condition": {
+      "type": "enumeration",
+      "enum": [
+        "new",
+        "like_new",
+        "good",
+        "fair",
+        "poor"
+      ],
+      "default": "good"
+    },
+    "negotiable": {
+      "type": "boolean",
+      "default": false
+    },
+    "views": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
+    },
+    "likes": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "expires_at": {
+      "type": "datetime"
+    },
+    "owner": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "reports": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::report.report",
+      "mappedBy": "product"
+    },
+    "favorites": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::favorite.favorite",
+      "mappedBy": "product"
+    },
+    "reviews": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::review.review",
+      "mappedBy": "product"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag"
+    },
+    "moderation_notes": {
+      "type": "text"
+    },
+    "rejected_reason": {
+      "type": "text"
+    },
+    "brand": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+    "kind": "collectionType",
+    "collectionName": "chats",
+    "info": {
+        "singularName": "chat",
+        "pluralName": "chats",
+        "displayName": "Чат",
+        "description": "Чаты между покупателями и продавцами"
+    },
+    "options": {
+        "draftAndPublish": false
+    },
+    "attributes": {
+        "buyer": {
+            "type": "relation",
+            "relation": "manyToOne",
+            "target": "plugin::users-permissions.user"
+        },
+        "seller": {
+            "type": "relation",
+            "relation": "manyToOne",
+            "target": "plugin::users-permissions.user"
+        },
+        "messages": {
+            "type": "relation",
+            "relation": "oneToMany",
+            "target": "api::message.message",
+            "mappedBy": "chat"
+        }
+    }
+}

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>YakMarket - Редактировать</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23000'/%3E%3Ccircle cx='32' cy='32' r='23' stroke='%23fff' stroke-width='4' fill='none'/%3E%3Ctext x='32' y='41' text-anchor='middle' fill='%23fff' font-family='Arial, sans-serif' font-size='36' font-weight='bold'%3Ey%3C/text%3E%3C/svg%3E">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="js/app-constants.js"></script>
+    <script src="js/strapi-client.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api/products-api.js"></script>
+    <script src="js/toast-notifications.js"></script>
+    <script src="js/edit-listing.js"></script>
+    <script src="theme.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+</head>
+
+<body class="bg-white text-gray-900 dark:bg-[#212121] dark:text-white min-h-screen transition-colors duration-300">
+    <div id="toast-container" class="fixed top-5 right-5 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
+
+    <header
+        class="h-20 flex items-center px-8 border-b border-gray-100 dark:border-white/5 sticky top-0 bg-white/80 dark:bg-[#121212]/80 backdrop-blur-xl z-[100]">
+        <div class="flex items-center gap-4 cursor-pointer group" onclick="window.history.back()">
+            <i data-lucide="arrow-left" class="w-6 h-6"></i>
+            <span class="text-xl font-black uppercase tracking-tighter">Назад</span>
+        </div>
+    </header>
+
+    <main class="max-w-2xl mx-auto px-4 py-12">
+        <h1 class="text-4xl font-black mb-10 tracking-tight uppercase">Редактировать</h1>
+
+        <form id="edit-form" class="space-y-8 animate-fade-in">
+            <div class="space-y-2">
+                <label class="text-[10px] uppercase font-bold tracking-[0.2em] opacity-40 ml-4">Название товара</label>
+                <input id="title" type="text" placeholder="Название..."
+                    class="w-full bg-gray-100 dark:bg-white/5 px-6 py-5 rounded-2xl font-bold border-none focus:ring-2 focus:ring-black dark:focus:ring-white transition-all">
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-[10px] uppercase font-bold tracking-[0.2em] opacity-40 ml-4">Цена (TJS)</label>
+                <input id="price" type="number" placeholder="0"
+                    class="w-full bg-gray-100 dark:bg-white/5 px-6 py-5 rounded-2xl font-bold border-none focus:ring-2 focus:ring-black dark:focus:ring-white transition-all">
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-[10px] uppercase font-bold tracking-[0.2em] opacity-40 ml-4">Описание</label>
+                <textarea id="description" rows="5" placeholder="Расскажите о товаре..."
+                    class="w-full bg-gray-100 dark:bg-white/5 px-6 py-5 rounded-2xl font-bold border-none focus:ring-2 focus:ring-black dark:focus:ring-white transition-all"></textarea>
+            </div>
+
+            <div id="imagePreview" class="hidden space-y-2">
+                <label class="text-[10px] uppercase font-bold tracking-[0.2em] opacity-40 ml-4">Фото</label>
+                <div class="aspect-video rounded-[32px] overflow-hidden bg-gray-100 dark:bg-white/5">
+                    <img id="previewImg" src="" class="w-full h-full object-cover" alt="">
+                </div>
+            </div>
+
+            <button id="submitBtn"
+                class="w-full bg-black dark:bg-white text-white dark:text-black py-6 rounded-3xl font-black text-sm uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-2xl shadow-black/10 dark:shadow-white/10 mt-6 mt-12">
+                Сохранить изменения
+            </button>
+        </form>
+    </main>
+</body>
+
+</html>

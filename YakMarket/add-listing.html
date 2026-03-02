@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>YakMarket - Добавление объявления</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23000'/%3E%3Ccircle cx='32' cy='32' r='23' stroke='%23fff' stroke-width='4' fill='none'/%3E%3Ctext x='32' y='41' text-anchor='middle' fill='%23fff' font-family='Arial, sans-serif' font-size='36' font-weight='bold'%3Ey%3C/text%3E%3C/svg%3E">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="clock.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+    <script>
+            (function () {
+                const savedTheme = localStorage.getItem('theme');
+                const isDark = savedTheme === 'dark' || (!savedTheme && true);
+                if (isDark) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            })();
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.5);
+            border-radius: 3px;
+        }
+
+        /* Hide scrollbar for photo grid */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+</head>
+
+<body class="bg-gray-50 dark:bg-[#121212] text-gray-900 dark:text-white transition-colors duration-300">
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-5 right-5 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- Header - Same as other pages -->
+    <header
+        class="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-[#212121] border-b border-gray-200 dark:border-white/5 shadow-sm h-16">
+        <div class="max-w-[1600px] mx-auto px-4 md:px-6 h-full flex items-center justify-between">
+            <div class="flex-shrink-0 flex items-center">
+                <a href="dashboard.html" class="flex items-center gap-3">
+                    <svg class="w-8 h-8 md:w-9 md:h-9 flex-shrink-0" viewBox="0 0 64 64" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <rect width="64" height="64" rx="16" class="fill-black dark:fill-white" />
+                        <circle cx="32" cy="32" r="23" stroke-width="4" class="stroke-white dark:stroke-black" />
+                        <text x="32" y="41" font-family="Arial, sans-serif" font-weight="bold" font-size="36"
+                            text-anchor="middle" class="fill-white dark:fill-black">y</text>
+                    </svg>
+                    <span
+                        class="text-lg md:text-xl font-black tracking-tesla uppercase text-black dark:text-white whitespace-nowrap">YAKMARKET.TJ</span>
+                </a>
+            </div>
+            <div class="flex items-center gap-1">
+                <button onclick="toggleTheme()"
+                    class="nav-item p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+                    <i data-lucide="sun" class="block dark:hidden lucide"></i>
+                    <i data-lucide="moon" class="hidden dark:block lucide"></i>
+                </button>
+                <a href="dashboard.html"
+                    class="nav-item p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+                    <i data-lucide="home" class="lucide"></i>
+                </a>
+                <a href="favorites.html"
+                    class="nav-item p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+                    <i data-lucide="heart" class="lucide"></i>
+                </a>
+                <a href="categories.html"
+                    class="nav-item p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+                    <i data-lucide="layout-grid" class="lucide"></i>
+                </a>
+                <a href="chat.html"
+                    class="nav-item p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+                    <i data-lucide="message-circle" class="lucide"></i>
+                </a>
+                <a href="settings.html"
+                    class="nav-item p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+                    <i data-lucide="user" class="lucide"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-2xl mx-auto px-4 pt-24 pb-12">
+        <!-- Page Title -->
+        <div class="mb-8">
+            <h1 class="text-2xl font-black text-gray-900 dark:text-white uppercase tracking-tight">Новое объявление</h1>
+            <p class="text-gray-500 dark:text-gray-400 mt-1">Заполните информацию о товаре</p>
+        </div>
+
+        <div
+            class="bg-white dark:bg-[#1a1a1a] rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-white/5 space-y-6">
+            <!-- Category Selector -->
+            <div class="space-y-2">
+                <label class="text-sm font-bold text-gray-900 dark:text-white">Категория <span
+                        class="text-red-500">*</span></label>
+                <button id="category-btn" onclick="openCategoryModal()"
+                    class="w-full text-left bg-gray-50 dark:bg-[#2a2a2a] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-500 dark:text-gray-400 flex justify-between items-center hover:bg-gray-100 dark:hover:bg-[#333] transition-colors">
+                    <span id="category-text">Выберите категорию</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </button>
+                <input type="hidden" id="selected-category-data">
+            </div>
+
+            <!-- Location Selector -->
+            <div class="space-y-2">
+                <label class="text-sm font-bold text-gray-900 dark:text-white">Локация <span
+                        class="text-red-500">*</span></label>
+                <div class="relative">
+                    <select id="location-input"
+                        class="w-full bg-gray-50 dark:bg-[#2a2a2a] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 transition-colors appearance-none">
+                        <option value="" disabled selected>Выберите локацию</option>
+                        <option value="Душанбе">Душанбе</option>
+                        <option value="Худжанд">Худжанд</option>
+                        <option value="Куляб">Куляб</option>
+                        <option value="Курган-Тюбе">Курган-Тюбе</option>
+                        <option value="Истаравшан">Истаравшан</option>
+                        <option value="Бохтар">Бохтар</option>
+                    </select>
+                    <i data-lucide="map-pin"
+                        class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none"></i>
+                </div>
+            </div>
+
+            <!-- Photos -->
+            <div class="space-y-2">
+                <div class="flex justify-between items-end">
+                    <label class="text-sm font-bold text-gray-900 dark:text-white">Фотографии</label>
+                    <span class="text-xs text-gray-400" id="photo-count">0 / 15</span>
+                </div>
+                <div class="grid grid-cols-4 sm:grid-cols-5 gap-2" id="photo-grid">
+                    <label title="Только форматы изображений"
+                        class="aspect-square bg-gray-50 dark:bg-[#2a2a2a] border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 dark:hover:bg-[#333] transition-colors">
+                        <i data-lucide="camera" class="text-gray-400 w-6 h-6"></i>
+                        <span class="text-[10px] text-gray-400 mt-1">Добавить</span>
+                        <input type="file" multiple accept="image/jpeg,image/png,image/webp" class="hidden"
+                            onchange="handlePhotoUpload(this)">
+                    </label>
+                </div>
+                <p class="text-xs text-gray-400">Максимум 15 фотографий. Первое фото будет главным.</p>
+            </div>
+
+            <!-- Title -->
+            <div class="space-y-2">
+                <label class="text-sm font-bold text-gray-900 dark:text-white">Название товара <span
+                        class="text-red-500">*</span></label>
+                <div class="relative">
+                    <input type="text" id="title-input" placeholder="Например: iPhone 14 Pro Max 256GB" maxlength="80"
+                        class="w-full bg-gray-50 dark:bg-[#2a2a2a] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 pr-16 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 transition-colors placeholder:text-gray-400">
+                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400" id="title-count">0 /
+                        80</span>
+                </div>
+            </div>
+
+            <!-- Price -->
+            <div class="space-y-2">
+                <label class="text-sm font-bold text-gray-900 dark:text-white">Цена <span
+                        class="text-red-500">*</span></label>
+                <div class="relative">
+                    <input type="number" id="price-input" placeholder="0" min="0"
+                        class="w-full bg-gray-50 dark:bg-[#2a2a2a] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 pr-16 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 transition-colors placeholder:text-gray-400">
+                    <span
+                        class="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-gray-400 font-medium">сомони</span>
+                </div>
+            </div>
+
+            <!-- Condition -->
+            <div class="space-y-2">
+                <label class="text-sm font-bold text-gray-900 dark:text-white">Состояние</label>
+                <div class="grid grid-cols-3 gap-2">
+                    <button type="button" onclick="selectCondition(this, 'new')"
+                        class="condition-btn py-3 px-4 rounded-xl border border-gray-200 dark:border-white/10 text-sm font-medium transition-all hover:border-black dark:hover:border-white"
+                        data-value="new">Новое</button>
+                    <button type="button" onclick="selectCondition(this, 'like_new')"
+                        class="condition-btn py-3 px-4 rounded-xl border border-gray-200 dark:border-white/10 text-sm font-medium transition-all hover:border-black dark:hover:border-white"
+                        data-value="like_new">Как новое</button>
+                    <button type="button" onclick="selectCondition(this, 'good')"
+                        class="condition-btn py-3 px-4 rounded-xl border border-gray-200 dark:border-white/10 text-sm font-medium transition-all hover:border-black dark:hover:border-white bg-black text-white border-black"
+                        data-value="good">Б/у</button>
+                </div>
+                <input type="hidden" id="condition-input" value="good">
+            </div>
+
+            <!-- Description -->
+            <div class="space-y-2">
+                <label class="text-sm font-bold text-gray-900 dark:text-white">Описание <span
+                        class="text-red-500">*</span></label>
+                <textarea id="desc-input" placeholder="Опишите товар подробно..." maxlength="1000" rows="5"
+                    class="w-full bg-gray-50 dark:bg-[#2a2a2a] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 transition-colors placeholder:text-gray-400 resize-none"></textarea>
+                <div class="flex justify-between items-center">
+                    <span class="text-xs text-gray-400">Минимум 10 символов</span>
+                    <span class="text-xs text-gray-400" id="desc-count">0 / 1000</span>
+                </div>
+            </div>
+
+            <!-- Phone -->
+            <div class="space-y-2">
+                <label class="text-sm font-bold text-gray-900 dark:text-white">Телефон для связи</label>
+                <div class="relative">
+                    <input type="tel" id="phone-input" placeholder="+992 XX XXX XX XX"
+                        class="w-full bg-gray-50 dark:bg-[#2a2a2a] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 transition-colors placeholder:text-gray-400">
+                    <i data-lucide="phone" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4"></i>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button onclick="publish()" id="publish-btn"
+                class="w-full bg-black dark:bg-white text-white dark:text-black font-bold py-4 rounded-xl hover:opacity-90 transition-all shadow-lg mt-4 flex items-center justify-center gap-2">
+                <span>Опубликовать</span>
+                <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </button>
+
+            <p class="text-xs text-gray-400 text-center">
+                После публикации объявление будет проверено модератором
+            </p>
+        </div>
+    </main>
+
+    <!-- Category Modal -->
+    <div id="categoryModal" class="fixed inset-0 z-[100] bg-white dark:bg-[#212121] hidden flex-col">
+        <div class="px-4 py-3 border-b border-gray-100 dark:border-white/5 flex items-center gap-3">
+            <button onclick="closeCategoryModal()"
+                class="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+                <i data-lucide="x" class="w-5 h-5 text-gray-600 dark:text-gray-300"></i>
+            </button>
+            <h2 class="text-lg font-bold text-gray-900 dark:text-white" id="modal-title">Выберите категорию</h2>
+            <button id="modal-back" onclick="resetCategoryView()"
+                class="hidden p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/5 ml-auto text-sm font-medium text-gray-600 dark:text-gray-300">
+                Назад
+            </button>
+        </div>
+        <div class="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar" id="category-list">
+            <!-- Injected via JS -->
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/locations.js"></script>
+    <script src="js/app-constants.js"></script>
+    <script src="js/strapi-client.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api/products-api.js"></script>
+    <script src="js/toast-notifications.js"></script>
+    <script src="js/add-listing.js"></script>
+
+    <script>
+        // Theme toggle
+        window.toggleTheme = function () {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        };
+
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        });
+
+        // Condition selector
+        window.selectCondition = function (btn, value) {
+            document.querySelectorAll('.condition-btn').forEach(b => {
+                b.classList.remove('bg-black', 'text-white', 'border-black', 'dark:bg-white', 'dark:text-black');
+                b.classList.add('border-gray-200', 'dark:border-white/10');
+            });
+            btn.classList.remove('border-gray-200', 'dark:border-white/10');
+            btn.classList.add('bg-black', 'text-white', 'border-black', 'dark:bg-white', 'dark:text-black');
+            document.getElementById('condition-input').value = value;
+        };
+
+        // Character counters
+        document.getElementById('title-input')?.addEventListener('input', function () {
+            document.getElementById('title-count').textContent = `${this.value.length} / 80`;
+        });
+
+        document.getElementById('desc-input')?.addEventListener('input', function () {
+            document.getElementById('desc-count').textContent = `${this.value.length} / 1000`;
+        });
+    </script>
+</body>
+
+</html>

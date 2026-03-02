@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>YakMarket - Главная</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23000'/%3E%3Ccircle cx='32' cy='32' r='23' stroke='%23fff' stroke-width='4' fill='none'/%3E%3Ctext x='32' y='41' text-anchor='middle' fill='%23fff' font-family='Arial, sans-serif' font-size='36' font-weight='bold'%3Ey%3C/text%3E%3C/svg%3E">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="js/strapi-client.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="theme.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes zoomFade {
+            0% {
+                opacity: 0;
+                transform: scale(1.1);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-zoom-fade {
+            animation: zoomFade 1s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+        }
+    </style>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+</head>
+
+<body class="bg-black text-white min-h-screen flex flex-col overflow-hidden">
+    <main class="flex-grow relative flex items-center justify-center">
+        <!-- Background Bloom -->
+        <div
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white/5 blur-[120px] rounded-full pointer-events-none">
+        </div>
+
+        <div class="relative z-10 text-center px-6 animate-zoom-fade">
+            <div class="flex justify-center mb-10">
+                <svg class="w-32 h-32" viewBox="0 0 64 64" fill="none">
+                    <rect width="64" height="64" rx="20" fill="white" />
+                    <circle cx="32" cy="32" r="23" stroke="black" stroke-width="4" />
+                    <text x="32" y="41" font-family="Arial, sans-serif" font-weight="bold" font-size="36"
+                        text-anchor="middle" fill="black">y</text>
+                </svg>
+            </div>
+
+            <h1 class="text-6xl md:text-8xl font-black tracking-tighter uppercase mb-4 leading-none">YakMarket</h1>
+            <p class="text-sm md:text-base font-bold tracking-[0.4em] uppercase opacity-40 mb-12">Premier Digital
+                Marketplace Tajikistan</p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="dashboard.html"
+                    class="w-full sm:w-auto bg-white text-black px-12 py-6 rounded-3xl font-black text-sm uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-white/10">Продолжить</a>
+                <a href="login.html"
+                    class="w-full sm:w-auto border border-white/20 px-12 py-6 rounded-3xl font-black text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-all">Войти</a>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

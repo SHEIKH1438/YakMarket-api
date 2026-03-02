@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>YakMarket - Настройки профиля</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23000'/%3E%3Ccircle cx='32' cy='32' r='23' stroke='%23fff' stroke-width='4' fill='none'/%3E%3Ctext x='32' y='41' text-anchor='middle' fill='%23fff' font-family='Arial, sans-serif' font-size='36' font-weight='bold'%3Ey%3C/text%3E%3C/svg%3E">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        gray: { 850: '#1f2937' }
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+            (function () {
+                const savedTheme = localStorage.getItem('theme');
+                const isDark = savedTheme === 'dark' || (!savedTheme && true);
+                if (isDark) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            })();
+    </script>
+    <style>
+        .rotate-90 {
+            transform: rotate(90deg);
+        }
+
+        .transition-transform {
+            transition-property: transform;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 300ms;
+        }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+</head>
+
+<body class="bg-gray-50 dark:bg-[#121212] text-gray-900 dark:text-white transition-colors duration-300">
+    <!-- Header - Same as Dashboard -->
+    <header
+        class="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-[#212121] border-b border-gray-200 dark:border-white/5 shadow-sm h-16">
+        <div class="max-w-[1600px] mx-auto px-4 md:px-6 h-full flex items-center justify-between">
+            <div class="flex-shrink-0 flex items-center">
+                <a href="dashboard.html" class="flex items-center gap-3">
+                    <svg class="w-8 h-8 md:w-9 md:h-9 flex-shrink-0" viewBox="0 0 64 64" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <rect width="64" height="64" rx="16" class="fill-black dark:fill-white" />
+                        <circle cx="32" cy="32" r="23" stroke-width="4" class="stroke-white dark:stroke-black" />
+                        <text x="32" y="41" font-family="Arial, sans-serif" font-weight="bold" font-size="36"
+                            text-anchor="middle" class="fill-white dark:fill-black">y</text>
+                    </svg>
+                    <span
+                        class="text-lg md:text-xl font-black tracking-tesla uppercase text-black dark:text-white whitespace-nowrap">YAKMARKET.TJ</span>
+                </a>
+            </div>
+            <div class="flex items-center gap-1">
+                <button onclick="toggleTheme()"
+                    class="nav-item p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+                    <i data-lucide="sun" class="block dark:hidden lucide"></i>
+                    <i data-lucide="moon" class="hidden dark:block lucide"></i>
+                </button>
+                <a href="dashboard.html"
+                    class="nav-item p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+                    <i data-lucide="home" class="lucide"></i>
+                </a>
+                <a href="favorites.html"
+                    class="nav-item p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+                    <i data-lucide="heart" class="lucide"></i>
+                </a>
+                <a href="categories.html"
+                    class="nav-item p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+                    <i data-lucide="layout-grid" class="lucide"></i>
+                </a>
+                <a href="chat.html"
+                    class="nav-item p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+                    <i data-lucide="message-circle" class="lucide"></i>
+                </a>
+                <a href="settings.html"
+                    class="nav-item p-2 rounded-full bg-gray-100 dark:bg-white/10 text-black dark:text-white transition-colors relative">
+                    <i data-lucide="user" class="lucide"></i>
+                    <img id="header-user-avatar" src="" class="w-6 h-6 rounded-full object-cover hidden" alt="Avatar">
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-[1600px] mx-auto px-4 md:px-6 pt-24 pb-12">
+        <div id="empty-state" class="empty-state hidden">
+            <div class="empty-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 2.64 2.64l.06.06a1.65 1.65 0 0 0-.33 1.82l-.06-.06a1.65 1.65 0 0 0-1.82 0l-.06-.06a1.65 1.65 0 0 0-1.82 0l-.06-.06z" />
+                </svg>
+            </div>
+            <h2 class="empty-title">Настройки не загружены</h2>
+            <p class="empty-subtitle">Попробуйте изменить фильтры или поиск.</p>
+            <button onclick="location.reload()" class="empty-btn">
+                <i data-lucide="refresh-cw" class="lucide"></i>
+                Обновить
+            </button>
+        </div>
+
+        <div id="settings-container" class="min-h-screen pt-20 pb-24">
+            <div class="container mx-auto max-w-5xl px-4 py-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <!-- Left Column: Personal Data -->
+                    <div
+                        class="bg-white dark:bg-[#1a1a1a] rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 dark:border-white/5 h-fit transition-colors">
+
+                        <!-- Avatar -->
+                        <div class="flex justify-center mb-8">
+                            <div class="relative group cursor-pointer">
+                                <div
+                                    class="w-28 h-28 bg-black dark:bg-white rounded-full flex items-center justify-center text-white dark:text-black text-4xl font-bold overflow-hidden ring-4 ring-gray-50 dark:ring-[#2a2a2a] group-hover:ring-gray-200 dark:group-hover:ring-[#333] transition-all">
+                                    <img id="user-avatar" class="w-full h-full object-cover hidden" />
+                                    <span id="avatar-text">Y</span>
+                                </div>
+                                <button onclick="document.getElementById('avatar-upload').click()"
+                                    class="absolute bottom-0 right-0 bg-white dark:bg-[#2a2a2a] text-black dark:text-white p-2.5 rounded-full border border-gray-200 dark:border-[#333] shadow-md hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <i data-lucide="camera" class="lucide-sm"></i>
+                                </button>
+                                <input type="file" id="avatar-upload" class="hidden" accept="image/*">
+                            </div>
+                        </div>
+
+                        <div class="space-y-6">
+                            <!-- Name -->
+                            <div class="space-y-2">
+                                <label class="text-sm font-bold text-gray-900 dark:text-gray-200 ml-1"
+                                    data-i18n="label_name">Имя</label>
+                                <input type="text" id="name-input" placeholder="Ваше имя"
+                                    class="w-full bg-gray-50 dark:bg-[#2a2a2a] border border-gray-200 dark:border-[#333] rounded-2xl px-5 py-4 text-base text-gray-900 dark:text-white focus:outline-none focus:bg-white dark:focus:bg-[#333] focus:border-black dark:focus:border-white transition-all placeholder:text-gray-400" />
+                            </div>
+
+                            <!-- Contact (Phone or Email) -->
+                            <div class="space-y-2">
+                                <label class="text-sm font-bold text-gray-900 dark:text-gray-200 ml-1"
+                                    id="contact-label" data-i18n="label_contact">Телефон / Email</label>
+                                <input type="text" id="contact-input" placeholder="Контактные данные"
+                                    class="w-full bg-gray-50 dark:bg-[#2a2a2a] border border-gray-200 dark:border-[#333] rounded-2xl px-5 py-4 text-base text-gray-900 dark:text-white focus:outline-none focus:bg-white dark:focus:bg-[#333] focus:border-black dark:focus:border-white transition-all placeholder:text-gray-400" />
+                            </div>
+
+                            <!-- Language -->
+                            <div class="space-y-2">
+                                <label class="text-sm font-bold text-gray-900 dark:text-gray-200 ml-1"
+                                    data-i18n="label_lang">Язык</label>
+                                <div class="flex bg-gray-100 dark:bg-[#2a2a2a] p-1.5 rounded-2xl">
+                                    <button onclick="setLang('ru')" id="btn-ru"
+                                        class="flex-1 py-3 rounded-xl text-sm font-bold transition-all shadow-sm bg-white dark:bg-[#333] text-black dark:text-white">Русский</button>
+                                    <button onclick="setLang('tj')" id="btn-tj"
+                                        class="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500 dark:text-gray-400 transition-all hover:text-black dark:hover:text-white">Тоҷикӣ</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Actions -->
+                    <div class="flex flex-col gap-6">
+
+                        <!-- Add Listing Card -->
+                        <div
+                            class="bg-white dark:bg-[#1a1a1a] rounded-3xl p-2 shadow-sm border border-gray-100 dark:border-white/5 transition-colors">
+                            <a href="add-listing.html"
+                                class="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all group">
+                                <div class="flex items-center gap-4">
+                                    <div
+                                        class="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                                        <i data-lucide="plus" class="lucide"></i>
+                                    </div>
+                                    <div>
+                                        <span class="font-bold text-lg text-gray-900 dark:text-white block"
+                                            data-i18n="add_listing">Разместить объявление</span>
+                                        <span class="text-xs text-gray-400 dark:text-gray-500"
+                                            data-i18n="add_listing_desc">Продать
+                                            товар</span>
+                                    </div>
+                                </div>
+                                <div
+                                    class="bg-gray-100 dark:bg-white/10 p-2 rounded-full group-hover:bg-white dark:group-hover:bg-white/20 transition-colors">
+                                    <i data-lucide="chevron-right"
+                                        class="text-gray-400 dark:text-white group-hover:text-black transition-colors"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- My Listings Card -->
+                        <div
+                            class="bg-white dark:bg-[#1a1a1a] rounded-3xl p-2 shadow-sm border border-gray-100 dark:border-white/5 transition-colors">
+                            <a href="my-listing.html"
+                                class="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all group">
+                                <div class="flex items-center gap-4">
+                                    <div
+                                        class="w-12 h-12 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                                        <i data-lucide="package" class="lucide"></i>
+                                    </div>
+                                    <div>
+                                        <span class="font-bold text-lg text-gray-900 dark:text-white block"
+                                            data-i18n="my_listings">Мои объявления</span>
+                                        <span class="text-xs text-gray-400 dark:text-gray-500"
+                                            data-i18n="my_listings_desc">Управление
+                                            товарами</span>
+                                    </div>
+                                </div>
+                                <div
+                                    class="bg-gray-100 dark:bg-white/10 p-2 rounded-full group-hover:bg-white dark:group-hover:bg-white/20 transition-colors">
+                                    <i data-lucide="chevron-right"
+                                        class="text-gray-400 dark:text-white group-hover:text-black transition-colors lucide"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- SHOP LOCATION SELECTOR -->
+                        <div
+                            class="bg-white dark:bg-[#1a1a1a] rounded-3xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden transition-all duration-300">
+                            <!-- Header / Toggle Button -->
+                            <button onclick="toggleMarketSelector()"
+                                class="w-full flex items-center justify-between p-6 bg-white dark:bg-[#1a1a1a] hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-left cursor-pointer">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 flex-shrink-0">
+                                        <i data-lucide="map-pin" class="lucide"></i>
+                                    </div>
+                                    <h2 class="text-lg font-bold text-gray-900 dark:text-white"
+                                        data-i18n="shop_location_title">
+                                        Местоположение магазина</h2>
+                                </div>
+                                <!-- Rotating Arrow -->
+                                <div id="market-arrow" class="text-gray-400 transition-transform duration-300">
+                                    <i data-lucide="chevron-right" class="lucide-lg"></i>
+                                </div>
+                            </button>
+
+                            <!-- Collapsible Content -->
+                            <div id="market-content" class="hidden px-6 pb-6">
+                                <div class="flex flex-col gap-4 pt-2">
+
+                                    <!-- Tip Banner -->
+                                    <div
+                                        class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-100 dark:border-yellow-900/30 rounded-xl p-4 flex items-start gap-3">
+                                        <i data-lucide="info" class="lucide-sm"></i>
+                                        <p class="text-sm text-yellow-800 dark:text-yellow-200 font-medium leading-relaxed"
+                                            data-i18n="shop_location_tip">
+                                            Совет: Если добавить сюда точное местоположение вашего магазина, это
+                                            привлечет
+                                            больше
+                                            покупателей.
+                                        </p>
+                                    </div>
+
+                                    <!-- Market Chips -->
+                                    <div class="space-y-2">
+                                        <label class="text-sm font-semibold text-gray-500 dark:text-gray-400 ml-1"
+                                            data-i18n="select_market_label">
+                                            Выберите торговый центр / Рынок
+                                        </label>
+                                        <div id="market-buttons-container" class="flex flex-wrap gap-2">
+                                            <!-- Buttons injected by JS -->
+                                        </div>
+                                    </div>
+
+                                    <!-- Dynamic Hint and Input -->
+                                    <div id="market-input-section" class="hidden mt-2 animate-fade-in">
+                                        <div
+                                            class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-t-2xl border-l-4 border-blue-500 mb-0">
+                                            <p id="market-hint-text"
+                                                class="text-sm text-blue-900 dark:text-blue-200 font-medium">
+                                                <!-- Hint text injected by JS -->
+                                            </p>
+                                        </div>
+                                        <div class="relative">
+                                            <input type="text" id="shop-details-input"
+                                                data-placeholder-i18n="input_shop_details_placeholder"
+                                                placeholder="Введите данные"
+                                                class="w-full bg-gray-50 dark:bg-[#2a2a2a] border-x border-b border-t-0 border-gray-200 dark:border-[#333] rounded-b-2xl px-5 py-4 text-base text-gray-900 dark:text-white focus:outline-none focus:bg-white dark:focus:bg-[#333] focus:border-blue-500 dark:focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:text-gray-400" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Security Card -->
+                        <div
+                            class="bg-white dark:bg-[#1a1a1a] rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 dark:border-white/5 flex-1 transition-colors">
+                            <h2 class="text-xl font-bold mb-6 flex items-center gap-2 text-gray-900 dark:text-white">
+                                <i data-lucide="shield" class="text-gray-400 lucide"></i>
+                                <span data-i18n="security_title">Безопасность</span>
+                            </h2>
+
+                            <div class="space-y-3">
+                                <button id="change-password-btn"
+                                    class="w-full flex items-center justify-between p-4 rounded-2xl bg-gray-50 dark:bg-[#2a2a2a] hover:bg-gray-100 dark:hover:bg-white/10 transition-all group text-left">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-10 h-10 rounded-full bg-white dark:bg-black flex items-center justify-center text-gray-600 dark:text-gray-300 shadow-sm group-hover:scale-110 transition-transform">
+                                            <i data-lucide="key-round" class="lucide-sm"></i>
+                                        </div>
+                                        <span
+                                            class="font-medium text-gray-700 dark:text-gray-200 group-hover:text-black dark:group-hover:text-white"
+                                            data-i18n="change_password">Сменить пароль</span>
+                                    </div>
+                                    <i data-lucide="chevron-right"
+                                        class="text-gray-400 group-hover:text-black dark:group-hover:text-white transition-colors"></i>
+                                </button>
+
+                                <button id="forgot-password-btn"
+                                    class="w-full flex items-center justify-between p-4 rounded-2xl bg-gray-50 dark:bg-[#2a2a2a] hover:bg-gray-100 dark:hover:bg-white/10 transition-all group text-left">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-10 h-10 rounded-full bg-white dark:bg-black flex items-center justify-center text-gray-600 dark:text-gray-300 shadow-sm group-hover:scale-110 transition-transform">
+                                            <i data-lucide="help-circle" class="lucide-sm"></i>
+                                        </div>
+                                        <span
+                                            class="font-medium text-gray-700 dark:text-gray-200 group-hover:text-black dark:group-hover:text-white"
+                                            data-i18n="forgot_password">Забыли пароль?</span>
+                                    </div>
+                                    <i data-lucide="chevron-right"
+                                        class="text-gray-400 group-hover:text-black dark:group-hover:text-white transition-colors"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Actions Card -->
+                        <div
+                            class="bg-white dark:bg-[#1a1a1a] rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 dark:border-white/5 space-y-4 transition-colors">
+                            <button id="save-btn"
+                                class="w-full bg-black dark:bg-white text-white dark:text-black font-bold py-4 rounded-2xl hover:opacity-90 transition-all transform active:scale-[0.99] shadow-lg shadow-gray-200 dark:shadow-none">
+                                <span data-i18n="save_changes">Сохранить изменения</span>
+                            </button>
+
+                            <button id="logout-btn"
+                                class="w-full bg-white dark:bg-[#2a2a2a] border-2 border-gray-200 dark:border-[#333] text-gray-700 dark:text-gray-200 font-bold py-4 rounded-2xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all flex items-center justify-center gap-2">
+                                <i data-lucide="log-out" size="18"></i>
+                                <span data-i18n="logout">Выйти</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Use global YakTheme
+            window.toggleTheme = function () {
+                window.YakTheme.toggle();
+            }
+
+            // Initialize Lucide for any static content
+            document.addEventListener('DOMContentLoaded', () => {
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            });
+        </script>
+
+        <!-- YakMarket Modules -->
+        <script src="js/navigation.js"></script>
+        <script src="js/auth.js"></script>
+        <script src="js/toast-notifications.js"></script>
+        <script src="js/settings.js"></script>

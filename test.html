@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YakMarket.tj - Главная</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Initialize Lucide icons immediately after script loads
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+        // Also try to initialize immediately in case DOM is already loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initLucide);
+        } else {
+            initLucide();
+        }
+        function initLucide() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+    </script>
+    <!-- YakMarket Modules - Strapi based -->
+    <script src="js/strapi-client.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/phone-auth.js"></script>
+    <script src="js/toast-notifications.js"></script>
+    <script src="js/models.js"></script>
+    <script src="js/middleware.js"></script>
+    <script src="js/controllers.js"></script>
+    <script src="js/error-codes.js"></script>
+    <script src="js/permissions.js"></script>
+    <script src="js/favorites.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/cloudinary-config.js"></script>
+    <script src="js/app.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { orange: { '#f97316': 600 } }
+                }
+            }
+        }
+    </script>
+    <script>
+            (function () {
+                const savedTheme = localStorage.getItem('theme');
+                const isDark = savedTheme === 'dark' || (!savedTheme && true);
+                if (isDark) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            })();
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .tracking-tesla {
+            letter-spacing: 0.25em;
+        }
+
+        /* Lucide Icons Styles */
+        .lucide {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* Smaller icons for specific use cases */
+        .lucide-sm {
+            width: 14px;
+            height: 14px;
+        }
+
+        .lucide-lg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Header icons */
+        .nav-item .lucide {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Favorite button icons */
+        .fav-btn .lucide {
+            width: 16px;
+            height: 16px;
+        }
+    </style>
+</head>
+
+<body class="bg-white dark:bg-[#212121] text-gray-900 dark:text-white min-h-screen transition-colors duration-300">
+    <!-- Header -->
+    <header
+        class="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-[#212121] border-b border-gray-200 dark:border-white/5 shadow-sm h-16 transition-colors duration-300">
+        <div class="max-w-[1600px] mx-auto px-4 md:px-6 h-full flex items-center justify-between">
+            <div class="flex-shrink-0 flex items-center">
+                <a href="dashboard.html" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                    <svg class="w-8 h-8 md:w-9 md:h-9 flex-shrink-0" viewBox="0 0 64 64" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <rect width="64" height="64" rx="16"
+                            class="fill-black dark:fill-white transition-colors duration-300" />
+                        <circle cx="32" cy="32" r="23" stroke-width="4"
+                            class="stroke-white dark:stroke-black transition-colors duration-300" />
+                        <text x="32" y="41" font-family="Arial, sans-serif" font-weight="bold" font-size="36"
+                            text-anchor="middle"
+                            class="fill-white dark:fill-black transition-colors duration-300">y</text>
+                    </svg>
+                    <span
+                        class="text-lg md:text-xl font-black tracking-tesla uppercase text-black dark:text-white transition-opacity whitespace-nowrap">YAKMARKET.TJ</span>
+                </a>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="toggleTheme()"
+                    class="nav-item p-2 rounded-full transition-colors hover:bg-gray-100 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300">
+                    <i data-lucide="sun" class="block dark:hidden lucide"></i>
+                    <i data-lucide="moon" class="hidden dark:block lucide"></i>
+                </button>
+                <a href="dashboard.html"
+                    class="nav-item relative p-2 rounded-full transition-colors hover:bg-gray-100 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 group">
+                    <i data-lucide="home" class="lucide"></i>
+                    <span
+                        class="absolute bottom-0 left-1/2 -translate-x-1/2 w-5 h-[2px] rounded-full bg-black dark:bg-white"></span>
+                </a>
+                <a href="favorites.html"
+                    class="nav-item relative p-2 rounded-full transition-colors hover:bg-gray-100 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 group">
+                    <i data-lucide="heart" class="lucide"></i>
+                </a>
+                <a href="categories.html"
+                    class="nav-item relative p-2 rounded-full transition-colors hover:bg-gray-100 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 group">
+                    <i data-lucide="layout-grid" class="lucide"></i>
+                </a>
+                <a href="chat.html"
+                    class="nav-item relative p-2 rounded-full transition-colors hover:bg-gray-100 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 group">
+                    <i data-lucide="message-circle" class="lucide"></i>
+                </a>
+                <a href="settings.html"
+                    class="nav-item relative p-2 rounded-full transition-colors hover:bg-gray-100 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 group">
+                    <i data-lucide="user" class="lucide" id="header-user-icon"></i>
+                    <img id="header-user-avatar" src="" class="w-6 h-6 rounded-full object-cover hidden" alt="Avatar">
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-[1600px] mx-auto px-4 md:px-6 pt-24 pb-12">
+        <!-- Search Section -->
+        <div class="max-w-2xl mx-auto mb-10 relative z-10">
+            <div class="relative flex items-center group">
+                <input type="text" id="dashboard-search" autocomplete="off" placeholder="Поиск товаров..."
+                    class="w-full bg-gray-100 dark:bg-[#333] border-2 border-transparent focus:border-black dark:focus:border-white rounded-2xl py-4 pl-5 pr-24 text-gray-900 dark:text-white transition-colors outline-none text-lg shadow-sm group-hover:shadow-md">
+                <button id="clear-search"
+                    class="absolute right-16 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hidden transition-colors">
+                    <i data-lucide="x" class="lucide"></i>
+                </button>
+                <button id="search-btn"
+                    class="absolute right-2 bg-black dark:bg-white text-white dark:text-black p-2.5 rounded-xl hover:opacity-80 transition-all active:scale-95">
+                    <i data-lucide="search" class="lucide"></i>
+                </button>
+            </div>
+
+            <!-- Smart Search Suggestions -->
+            <div id="search-suggestions"
+                class="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#2a2a2a] rounded-2xl shadow-xl border border-gray-100 dark:border-white/5 hidden overflow-hidden transition-colors z-50">
+                <div id="search-history" class="p-2 border-b border-gray-100 dark:border-white/5 hidden">
+                    <div
+                        class="flex justify-between items-center px-3 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                        <span>История</span>
+                        <button onclick="clearHistory()" class="hover:text-red-500 transition-colors">Очистить</button>
+                    </div>
+                    <div id="history-list"></div>
+                </div>
+                <div id="suggestions-list" class="p-2"></div>
+            </div>
+        </div>
+
+        <!-- Categories (Top 6) -->
+        <div class="mb-10">
+            <h2 class="text-xl font-bold mb-5 px-1 text-gray-900 dark:text-white">Популярные категории</h2>
+            <div id="dashboard-categories" class="grid grid-cols-3 md:grid-cols-6 gap-3 md:gap-4">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div>
+            <h2 class="text-xl font-bold mb-5 px-1 text-gray-900 dark:text-white">Рекомендации для вас</h2>
+            <div id="products-grid"
+                class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+                <!-- Injected via JS -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="products-empty" class="empty-state hidden">
+                <div class="empty-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="20" x2="18" y2="10" />
+                        <line x1="12" y1="20" x2="12" y2="4" />
+                        <line x1="6" y1="20" x2="6" y2="14" />
+                    </svg>
+                </div>
+                <h2 class="empty-title">По вашему запросу ничего не найдено</h2>
+                <p class="empty-subtitle">Попробуйте изменить фильтры или поиск.</p>
+                <button onclick="location.reload()" class="empty-btn">
+                    <i data-lucide="refresh-cw" class="lucide"></i>
+                    Обновить
+                </button>
+            </div>
+        </div>
+    </main>
+
+
+
+    <script>
+        window.toggleTheme = function () {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        };
+    </script>
+    <script>
+        // Use global variables instead of ES6 imports
+        // YakFirebase, YakToast are already loaded globally
+
+        // Initialize Lucide icons
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+
+        // Load favorites from localStorage
+        let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+
+        // Track favorites changes for notifications
+        const originalLocalStorageSet = localStorage.setItem;
+        localStorage.setItem = function (key, value) {
+            if (key === 'favorites') {
+                originalLocalStorageSet.apply(this, arguments);
+                // Show notification when favorites change
+                try {
+                    const favs = JSON.parse(value);
+                    const isAdded = favs.length > favorites.length;
+                    const productId = isAdded ? favs.find(id => !favorites.includes(id)) : favorites.find(id => !favs.includes(id));
+                    const product = productsData.find(p => p.id === productId);
+                    if (product) {
+                        showFavoritesNotification(product.title, isAdded);
+                    }
+                } catch (e) { }
+            }
+            originalLocalStorageSet.apply(this, arguments);
+        };
+
+        // Use firebase.database() and firebase.auth() globally
+
+        // Wait for Firebase to be ready before using it
+        function initFirebaseListeners() {
+            if (typeof firebase !== 'undefined' && typeof firebase.auth === 'function') {
+                firebase.auth().onAuthStateChanged(user => {
+                    const avatar = document.getElementById('header-user-avatar');
+                    const icon = document.getElementById('header-user-icon');
+                    if (user && user.photoURL) {
+                        avatar.src = user.photoURL;
+                        avatar.classList.remove('hidden');
+                        icon.classList.add('hidden');
+                    } else {
+                        avatar.classList.add('hidden');
+                        icon.classList.remove('hidden');
+                    }
+
+                    // Real-time Online Status Tracking
+                    if (user) {
+                        // loadFavoritesFromFirebase(user.uid);
+                    }
+                });
+            } else {
+                // Retry if firebase not ready yet
+                setTimeout(initFirebaseListeners, 100);
+            }
+        }
+
+        // Start listening for auth state
+        initFirebaseListeners();
+
+        async function loadFavoritesFromFirebase(userId) {
+            try {
+                const db = firebase.database();
+                const snap = await db.ref(`favorites/${userId}`).once('value');
+                if (snap.exists()) {
+                    favorites = Object.keys(snap.val());
+                    localStorage.setItem('favorites', JSON.stringify(favorites));
+                    renderProducts();
+                }
+            } catch (error) {
+                console.error('Error loading favorites:', error);
+            }
+        }
+
+        // Toggle favorite with smart notification
+        window.toggleFavorite = async (productId, event) => {
+            if (event) event.stopPropagation();
+
+            const user = firebase.auth().currentUser;
+            const isFav = favorites.includes(productId);
+            const product = productsData.find(p => p.id === productId);
+
+            try {
+                if (isFav) {
+                    // Remove from favorites
+                    favorites = favorites.filter(id => id !== productId);
+                    localStorage.setItem('favorites', JSON.stringify(favorites));
+
+                    if (user) {
+                        await firebase.database().ref(`favorites/${user.uid}/${productId}`).remove();
+                    }
+
+                    if (product) {
+                        showFavoritesNotification(product.title, false);
+                    }
+                } else {
+                    // Add to favorites
+                    favorites.push(productId);
+                    localStorage.setItem('favorites', JSON.stringify(favorites));
+
+                    if (user) {
+                        await firebase.database().ref(`favorites/${user.uid}/${productId}`).set({ addedAt: Date.now() });
+                    }
+
+                    if (product) {
+                        showFavoritesNotification(product.title, true);
+                    }
+                }
+                renderProducts();
+            } catch (error) {
+                console.error('Error toggling favorite:', error);
+                showErrorToast('Произошла неизвестная ошибка');
+            }
+        };
+
+        // Categories data
+        const categoriesData = [
+            { name: 'Мобильные телефоны', img: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400' },
+            { name: 'Электроника', img: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=400' },
+            { name: 'Компьютеры и техника', img: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400' },
+            { name: 'Аудио и аксессуары', img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400' },
+            { name: 'Игры и развлечения', img: 'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=400' },
+            { name: 'Одежда', img: 'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=400' }
+        ];
+
+        let productsData = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const catList = document.getElementById('dashboard-categories');
+            const prodGrid = document.getElementById('products-grid');
+            const emptyState = document.getElementById('products-empty');
+
+            // Search Logic
+            const searchInput = document.getElementById('dashboard-search');
+            const clearBtn = document.getElementById('clear-search');
+            const searchBtn = document.getElementById('search-btn');
+            const suggestionsBox = document.getElementById('search-suggestions');
+            const historyList = document.getElementById('history-list');
+            const suggestionsList = document.getElementById('suggestions-list');
+
+            // Load History
+            let searchHistory = JSON.parse(localStorage.getItem('yak_search_history') || '[]');
+
+            function renderHistory() {
+                if (searchHistory.length === 0) {
+                    document.getElementById('search-history').classList.add('hidden');
+                } else {
+                    document.getElementById('search-history').classList.remove('hidden');
+                    historyList.innerHTML = searchHistory.slice(0, 3).map(term => `
+                        <div class="flex items-center justify-between px-3 py-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors group">
+                            <div onclick="selectSearch('${term}')" class="flex items-center gap-3 cursor-pointer flex-1">
+                                <i data-lucide="clock" class="lucide-sm text-gray-400"></i>
+                                <span class="text-sm text-gray-700 dark:text-gray-200">${term}</span>
+                            </div>
+                            <button onclick="removeFromHistory('${term}', event)" class="text-gray-400 hover:text-red-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <i data-lucide="x" class="lucide-sm"></i>
+                            </button>
+                        </div>
+                    `).join('');
+                    lucide.createIcons();
+                }
+            }
+
+            window.clearHistory = () => {
+                searchHistory = [];
+                localStorage.setItem('yak_search_history', '[]');
+                renderHistory();
+            };
+
+            window.removeFromHistory = (term, event) => {
+                event.stopPropagation();
+                searchHistory = searchHistory.filter(t => t !== term);
+                localStorage.setItem('yak_search_history', JSON.stringify(searchHistory));
+                renderHistory();
+            };
+
+            window.selectSearch = (term) => {
+                searchInput.value = term;
+                performSearch();
+            };
+
+            searchInput.addEventListener('input', (e) => {
+                const val = e.target.value.trim().toLowerCase();
+                if (val) {
+                    clearBtn.classList.remove('hidden');
+                    suggestionsBox.classList.remove('hidden');
+
+                    // Filter suggestions
+                    const matches = [
+                        ...categoriesData.filter(c => c.name.toLowerCase().includes(val)).map(c => ({ type: 'cat', text: c.name })),
+                        ...productsData.filter(p => p.title.toLowerCase().includes(val)).map(p => ({ type: 'prod', text: p.title }))
+                    ].slice(0, 5);
+
+                    suggestionsList.innerHTML = matches.map(m => `
+                        <div onclick="selectSearch('${m.text}')" class="flex items-center gap-3 px-3 py-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg cursor-pointer transition-colors">
+                            <i data-lucide="${m.type === 'cat' ? 'layout-grid' : 'search'}" class="lucide-sm text-gray-400"></i>
+                            <span class="text-sm text-gray-700 dark:text-gray-200">${m.text}</span>
+                        </div>
+                    `).join('');
+                    lucide.createIcons();
+                } else {
+                    clearBtn.classList.add('hidden');
+                    suggestionsBox.classList.add('hidden');
+                }
+            });
+
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') performSearch();
+            });
+
+            clearBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                clearBtn.classList.add('hidden');
+                suggestionsBox.classList.add('hidden');
+                searchInput.focus();
+                renderProducts();
+            });
+
+            searchBtn.addEventListener('click', performSearch);
+
+            function saveHistory(query) {
+                if (!query) return;
+                if (!searchHistory.includes(query)) {
+                    searchHistory.unshift(query);
+                    searchHistory = searchHistory.slice(0, 10);
+                    localStorage.setItem('yak_search_history', JSON.stringify(searchHistory));
+                    renderHistory();
+                }
+            }
+
+            function performSearch() {
+                const query = searchInput.value.trim().toLowerCase();
+                saveHistory(query);
+
+                if (!query) {
+                    renderProducts();
+                    return;
+                }
+
+                const filtered = productsData.filter(p =>
+                    p.title.toLowerCase().includes(query) ||
+                    p.category.toLowerCase().includes(query)
+                );
+
+                renderFilteredProducts(filtered);
+            }
+
+            // Render Top 6 Categories
+            catList.innerHTML = categoriesData.slice(0, 6).map(cat => `
+                <a href="categories.html?cat=${encodeURIComponent(cat.name)}" class="flex flex-col items-center gap-2 group w-full text-center">
+                    <div class="w-full aspect-square relative rounded-2xl overflow-hidden bg-white shadow-sm border border-transparent group-hover:border-gray-300 dark:group-hover:border-white/20 transition-all">
+                        <img src="${cat.img}" alt="${cat.name}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
+                    </div>
+                    <span class="text-[11px] md:text-xs font-medium text-center line-clamp-1 w-full text-gray-600 dark:text-gray-300 category-text group-hover:text-black dark:group-hover:text-white transition-colors">${cat.name}</span>
+                </a>
+            `).join('');
+
+            lucide.createIcons();
+
+            // Load products
+            try {
+                const snapshot = await firebase.database().ref('products').once('value');
+                if (snapshot.exists()) {
+                    snapshot.forEach(child => {
+                        productsData.push({ id: child.key, ...child.val() });
+                    });
+                } else {
+                    // Use test data if no products
+                    const testProducts = [
+                        { title: "iPhone 16 Pro Max 1TB Desert Titanium", price: 18500, category: "Мобильные телефоны", location: "Центр", photos: ["https://images.unsplash.com/photo-1726058043681-67da785b9b7e?w=600"], description: "Новинка! В наличии. Глобальная версия.", createdAt: Date.now() },
+                        { title: "iPhone 15 Pro Natural Titanium", price: 13200, category: "Мобильные телефоны", location: "ЦУМ", photos: ["https://images.unsplash.com/photo-1696446701796-da61225697cc?w=600"], description: "Отличное состояние, полный комплект.", createdAt: Date.now() - 5000 },
+                        { title: "AirPods Pro 2 MagSafe", price: 2450, category: "Электроника", location: "Душанбе Молл", photos: ["https://images.unsplash.com/photo-1603351154351-5e2d0600bb77?w=600"], description: "Новые, запечатанные.", createdAt: Date.now() - 8000 },
+                        { title: "iPad Pro 11 M4 (2024)", price: 14500, category: "Электроника", location: "Центр", photos: ["https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=600"], description: "Самый тонкий iPad в истории.", createdAt: Date.now() - 15000 },
+                        { title: "MacBook Pro 14 M3", price: 28500, category: "Компьютеры и техника", location: "Центр", photos: ["https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600"], description: "Новый, в коробке.", createdAt: Date.now() - 20000 },
+                        { title: "Apple Watch Ultra 2", price: 12800, category: "Электроника", location: "ЦУМ", photos: ["https://images.unsplash.com/photo-1433789124366-7eb7160d765c?w=600"], description: "Премиум качество.", createdAt: Date.now() - 25000 }
+                    ];
+                    productsData = testProducts.map((p, i) => ({ id: 'test_' + i, ...p }));
+                }
+
+                // Sort by newest
+                productsData.sort((a, b) => b.createdAt - a.createdAt);
+
+                renderProducts();
+            } catch (error) {
+                console.error('Error loading products:', error);
+                showErrorToast('Произошла неизвестная ошибка');
+            }
+        });
+
+        function renderFilteredProducts(filtered) {
+            const prodGrid = document.getElementById('products-grid');
+            const emptyState = document.getElementById('products-empty');
+
+            if (filtered.length === 0) {
+                prodGrid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('flex');
+                return;
+            }
+
+            prodGrid.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+            emptyState.classList.remove('flex');
+
+            prodGrid.innerHTML = filtered.map(p => {
+                const isFav = favorites.includes(p.id);
+                return `
+                    <div class="flex flex-col gap-3 group cursor-pointer relative" onclick="window.location.href='product-detail.html?id=${p.id}'">
+                        <div class="relative aspect-square rounded-2xl overflow-hidden bg-gray-100 dark:bg-[#333333] product-card-bg">
+                            <img src="${p.photos ? p.photos[0] : 'https://via.placeholder.com/300'}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                            ${p.badge ? `<div class="absolute top-3 left-3 flex flex-col gap-1 z-10"><span class="bg-white text-black text-[10px] font-bold px-2 py-1 rounded-md shadow-sm">${p.badge}</span></div>` : ''}
+                            <button onclick="toggleFavorite('${p.id}', event)" class="fav-btn absolute bottom-3 right-3 w-8 h-8 rounded-full bg-white dark:bg-[#444] ${isFav ? 'text-red-500' : 'text-gray-800 dark:text-white'} shadow-md hover:scale-110 transition-transform active:scale-95 flex items-center justify-center z-20">
+                                <i data-lucide="heart" class="${isFav ? 'fill-red-500' : ''}"></i>
+                            </button>
+                        </div>
+                        <div class="px-1">
+                            <h3 class="text-sm line-clamp-1 font-medium mb-1 text-gray-700 dark:text-gray-200 text-dynamic">${p.title}</h3>
+                            <div class="flex justify-between items-center">
+                                <div class="flex flex-col">
+                                    <span class="text-lg font-bold text-black dark:text-white text-dynamic">${p.price} c.</span>
+                                    ${p.oldPrice ? `<span class="text-xs text-gray-500 dark:text-gray-400 line-through">${p.oldPrice}</span>` : ''}
+                                </div>
+                            </div>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">${p.location || 'YakMarket'}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        function renderProducts() {
+            renderFilteredProducts(productsData);
+        }
+    </script>
+</body>
+
+</html>
