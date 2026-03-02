@@ -11,20 +11,16 @@ const axios = require('axios');
 
 // Конфигурация Telegram
 const CONFIG = {
-    BOT_TOKEN: '8662410817:AAEPg37YkiJ6XnfnpmDW_fg1kp0hsz2_Eh0',
+    BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN || '8662410817:AAEPg37YkiJ6XnfnpmDW_fg1kp0hsz2_Eh0',
     API_BASE: 'https://api.telegram.org/bot',
     STRAPI_URL: process.env.STRAPI_URL || 'https://yakmarket-api-production.up.railway.app'
 };
 
 const TELEGRAM_API = `${CONFIG.API_BASE}${CONFIG.BOT_TOKEN}`;
 
-// Модераторы для уведомлений
-const MODERATORS = [
-    { id: '8012802187', name: 'SheikhK2' },
-    { id: '1234567890', name: 'Moderator_1' },
-    { id: '2345678901', name: 'Moderator_2' },
-    { id: '3456789012', name: 'Moderator_3' }
-];
+// Модераторы для уведомлений (из ENV или дефолт)
+const modsEnv = process.env.ADMIN_IDS || '8012802187';
+const MODERATORS = modsEnv.split(',').map(id => ({ id: id.trim(), name: 'Admin' }));
 
 /**
  * Отправка сообщения в Telegram
@@ -70,8 +66,8 @@ function formatProductNotification(product, seller) {
 
         buttons: [
             [
-                { text: '✅ Принять', callback_data: `approve_PROD_${product.id}` },
-                { text: '❌ Отклонить', callback_data: `reject_PROD_${product.id}` }
+                { text: '✅ Принять', callback_data: `product_approve_${product.id}` },
+                { text: '❌ Отклонить', callback_data: `product_reject_${product.id}` }
             ],
             [
                 { text: '👤 Инфо о продавце', callback_data: `user_PROD_${product.id}` },
@@ -126,20 +122,33 @@ module.exports = {
 
         // 2. МГНОВЕННАЯ ОТПРАВКА В TELEGRAM
         try {
+            // Получаем полные данные товара с relationships
+            let product = result;
+            try {
+                const productData = await strapiInstance.entityService.findOne('api::product.product', result.id, {
+                    populate: ['owner', 'category', 'images']
+                });
+                if (productData) {
+                    product = productData;
+                }
+            } catch (e) {
+                console.log('[Lifecycle] Используем базовые данные result');
+            }
+
             // Получаем данные продавца
             let seller = null;
-            if (result.owner) {
-                if (typeof result.owner === 'object') {
-                    seller = result.owner;
+            if (product.owner) {
+                if (typeof product.owner === 'object') {
+                    seller = product.owner;
                 } else {
                     seller = await strapiInstance.db.query('plugin::users-permissions.user').findOne({
-                        where: { id: result.owner }
+                        where: { id: product.owner }
                     });
                 }
             }
 
             // Формируем уведомление
-            const notification = formatProductNotification(result, seller);
+            const notification = formatProductNotification(product, seller);
 
             // Отправляем всем модераторам ПАРАЛЛЕЛЬНО (мгновенно)
             const sendPromises = MODERATORS.map(async (mod) => {
